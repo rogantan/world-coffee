@@ -1,8 +1,9 @@
 from common.model import Base
 from sqlalchemy.orm import Mapped, mapped_column, func
-from sqlalchemy import String, BigInteger, ForeignKey
+from sqlalchemy import String, BigInteger, ForeignKey, Enum
 from sqlalchemy_utils.types.choice import ChoiceType
 from datetime import datetime
+from app.admin.enum.permission_mode import PermissionMode
 
 
 class Permission(Base):
@@ -11,4 +12,4 @@ class Permission(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     report_id: Mapped[int] = mapped_column(ForeignKey("report.id"))
     user_id: Mapped[str] = mapped_column(ForeignKey("user.id"))
-    mode: Mapped[ChoiceType["displayed", "hidden", "editable"]] = mapped_column(String(255))
+    mode: Mapped[PermissionMode] = mapped_column(Enum(PermissionMode, name="permission_mode"))
