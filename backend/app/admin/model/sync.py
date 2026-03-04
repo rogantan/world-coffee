@@ -1,5 +1,5 @@
 from common.model import Base
-from sqlalchemy.orm import Mapped, mapped_column, func
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, BigInteger, Enum
 from datetime import datetime
 from typing import Optional
