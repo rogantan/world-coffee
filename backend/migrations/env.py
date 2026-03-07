@@ -10,6 +10,7 @@ from common.model import Base
 from app.admin.model.sync import Synchronization
 from app.admin.model.user import User
 from app.admin.model.salary_increase import SalaryIncrease
+from app.reports.model.report import Report
 
 config = context.config
 

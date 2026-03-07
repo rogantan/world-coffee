@@ -1,3 +1,5 @@
+# from app.admin.model.permission import Permission
+# from app.admin.model.salary_increase import SalaryIncrease
 from common.model import Base
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -16,7 +18,7 @@ class User(Base):
     first_name: Mapped[str] = mapped_column(String(255))
     middle_name: Mapped[Optional[str]] = mapped_column(String(255))
     email: Mapped[str] = mapped_column(String(255))
-    archived: Mapped[bool] 
+    archived: Mapped[bool]
     registered: Mapped[bool]
     has_eighteen_months: Mapped[bool]
     ms_created: Mapped[datetime]
@@ -27,4 +29,10 @@ class User(Base):
     )
     created_at: Mapped[datetime] = mapped_column(
         server_default=func.timezone("UTC", func.now())
+    )
+    salary_increase: Mapped[list["SalaryIncrease"]] = relationship( # type: ignore
+        "SalaryIncrease", back_populates="user"
+    )
+    permissions: Mapped[list["Permission"]] = relationship( # type: ignore
+        "Permission", back_populates="user"
     )

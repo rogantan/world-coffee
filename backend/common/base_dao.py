@@ -27,4 +27,14 @@ class BaseDao(Generic[Model]):
         result = await db.execute(query)
         return result.scalars().all()
     
+    async def update(self, db: AsyncSession, model_id: int | str, **data: dict) -> Model:
+        query = update(self.model).where(self.model.id == model_id).values(**data).returning(self.model)
+        data = await db.execute(query)
+        await db.commit()
+        return data.scalars().one()
+    
+    async def select_one(self, db: AsyncSession, **filter: dict) -> Model | None:
+        query = select(self.model).filter_by(**filter)
+        result = await db.execute(query)
+        return result.scalar()
     
