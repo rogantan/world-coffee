@@ -37,3 +37,6 @@ class UserCreateSchema(BaseModel):
 
 class UserInDbSchema(UserCreateSchema):
     hash_password: Optional[str]
+
+class UserRoleSchema(BaseModel):
+    role: str

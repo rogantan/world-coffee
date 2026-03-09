@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Request, Form
 from pyrate_limiter import Limiter, Rate
 from app.admin.schema.user import AuthSchema
 from fastapi_limiter.depends import RateLimiter
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from app.admin.service.auth_service import auth_service
 from app.admin.schema.token import Token
 
@@ -15,4 +15,9 @@ async def login_access_token(request: Request,
     obj: AuthSchema = AuthSchema(username=username, password=password)
     return await auth_service.login(request, obj)
 
+DependsJwtAuth = Depends(OAuth2PasswordBearer(tokenUrl="/backend/auth/token"))
+
+@router.post("/logout", summary="Выход пользователя из системы", dependencies=[DependsJwtAuth])
+async def user_logout():
+    pass
 # dependencies=[Depends(RateLimiter(limiter=Limiter(Rate(5, 60))))],

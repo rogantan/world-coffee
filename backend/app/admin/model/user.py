@@ -3,7 +3,7 @@
 from common.model import Base
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, UUID, func
+from sqlalchemy import String, UUID, func, ForeignKey
 from typing import Optional
 
 class User(Base):
@@ -11,7 +11,7 @@ class User(Base):
 
     id: Mapped[str] = mapped_column(UUID, primary_key=True)
     hash_password: Mapped[str] = mapped_column(String(255))
-    role: Mapped[str] = mapped_column(String(255))
+    role_id: Mapped[int] = mapped_column(ForeignKey("role.id"))
     name: Mapped[str] = mapped_column(String(255))
     uid: Mapped[str] = mapped_column(String(255))
     last_name: Mapped[str] = mapped_column(String(255))
@@ -30,9 +30,12 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(
         server_default=func.timezone("UTC", func.now())
     )
+    role: Mapped["Role"] = relationship( # type: ignore
+        "Role", back_populates="users"
+    )
     salary_increase: Mapped[list["SalaryIncrease"]] = relationship( # type: ignore
         "SalaryIncrease", back_populates="user"
     )
-    permissions: Mapped[list["Permission"]] = relationship( # type: ignore
-        "Permission", back_populates="user"
+    user_permissions: Mapped[list["UserPermission"]] = relationship( # type: ignore
+        "UserPermission", back_populates="user"
     )

@@ -8,7 +8,7 @@ class RetailStore(Base):
 
     id: Mapped[str] = mapped_column(UUID, primary_key=True)
     name: Mapped[str] = mapped_column(String(255))
-    short_name: Mapped[str] = mapped_column(String(255))
+    short_name: Mapped[str] = mapped_column(String(255), nullable=True)
     store_id: Mapped[str] = mapped_column(ForeignKey("store.id"))
     archived: Mapped[bool]
     ms_updated: Mapped[datetime]

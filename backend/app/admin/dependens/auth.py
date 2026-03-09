@@ -8,7 +8,7 @@ from core.config import settings
 from app.admin.schema.user import UserCreateSchema, UserSchema
 from app.admin.schema.token import TokenData
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/back/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/backend/auth/token")
 
 from app.admin.service.user_service import user_service
 

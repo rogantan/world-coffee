@@ -3,7 +3,7 @@ from app.admin.dao.user_dao import user_dao
 
 class UserService:
 
-    async def get_user(username: str):
+    async def get_user(self, username: str):
         async with async_session() as session:
             user = await user_dao.get(username, session)
             permission = await user_dao.user_permissions(session, user.id)
@@ -11,7 +11,6 @@ class UserService:
             info["salary_increase"] = user.salary_increase[-1]
             info["permissions"] = permission
             return user
-    
     
 
 

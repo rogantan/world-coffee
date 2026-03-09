@@ -11,6 +11,11 @@ from app.admin.model.sync import Synchronization
 from app.admin.model.user import User
 from app.admin.model.salary_increase import SalaryIncrease
 from app.reports.model.report import Report
+from app.admin.model.user_permission import UserPermission
+from app.admin.model.role import Role
+from app.admin.model.role_permission import RolePermission
+from app.admin.model.store import Store
+from app.reports.model.retail_store import RetailStore
 
 config = context.config
 

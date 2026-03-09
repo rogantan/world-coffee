@@ -12,6 +12,9 @@ class Report(Base):
     description: Mapped[str] = mapped_column(nullable=True)
     mode: Mapped[PermissionMode] = mapped_column(Enum(PermissionMode, name="permission_mode"))
 
-    permission: Mapped["Permission"] = relationship(  # type: ignore
-        "Permission", back_populates="report"
+    role_permission: Mapped["RolePermission"] = relationship(  # type: ignore
+        "RolePermission", back_populates="report"
+    )
+    user_permissions: Mapped["UserPermission"] = relationship( # type: ignore
+        "UserPermission", back_populates="report"
     )
