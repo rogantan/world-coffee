@@ -7,6 +7,21 @@ class AuthSchema(BaseModel):
     username: str
     password: str | None
 
+
+class ReportPermission(BaseModel):
+    title: str
+    display_name: str
+    mode: str
+
+class SalaryIncr(BaseModel):
+    value: float
+
+    @field_validator("value")
+    def validate_value(cls, v):
+        if v is None:
+            return v
+        return round(v,2)
+
 class UserSchema(BaseModel):
     id: UUID
     role: str
@@ -18,6 +33,8 @@ class UserSchema(BaseModel):
     email: Optional[EmailStr] = None
     archived: bool
     registered: bool
+    salary_increase: SalaryIncr
+    permissions: Optional[list[ReportPermission]]
 
 class UserCreateSchema(BaseModel):
     id: UUID

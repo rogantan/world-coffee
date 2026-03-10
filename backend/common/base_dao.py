@@ -1,6 +1,7 @@
 from typing import TypeVar, Type, Generic
 from sqlalchemy import select, update, func, insert
 from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List
 
 Model = TypeVar("Model")
 
@@ -16,7 +17,7 @@ class BaseDao(Generic[Model]):
         limit: int = None,
         order_by: str = None,
         desc: bool = False
-    ) -> list[Model]:
+    ) -> List[Model]:
         if not order_by:
             order_by = self.model.created_at
         else:
@@ -38,3 +39,7 @@ class BaseDao(Generic[Model]):
         result = await db.execute(query)
         return result.scalar()
     
+    async def find_one_or_more(self, db: AsyncSession, **filter: dict) -> Model | None:
+        query = select(self.model).filter_by(**filter)
+        result = await db.execute(query)
+        return result.scalars().one_or_none()

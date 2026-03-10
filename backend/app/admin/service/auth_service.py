@@ -39,4 +39,4 @@ class AuthService:
             )
             return Token(access_token=access_token, token_type="bearer")
 
-auth_service = AuthService()
+auth_service: AuthService = AuthService()
