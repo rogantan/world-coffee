@@ -7,7 +7,9 @@ from datetime import datetime, timedelta
 class RolePermissionDAO(BaseDao[RolePermission]):
     
     async def get_permissions(self, db: AsyncSession, role_id: int):
-        query = select(RolePermission).where
+        query = select(RolePermission).where(RolePermission.role_id == role_id)
+        result = await db.execute(query)
+        return result.scalars().all()
     
 
 

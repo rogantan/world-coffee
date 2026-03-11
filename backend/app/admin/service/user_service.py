@@ -43,10 +43,10 @@ class UserService:
             if not await user_dao.find_one_or_more(session, uid=username):
                 raise UserNotFoundException
             await user_dao.reset_permissions(session, username)
-            result = await user_dao.update_role(session, username, role.role)
-            role_permissions = await role_permission_dao.get_permissions(session, role_obj["id"])
+            role_permissions = await role_permission_dao.get_permissions(session, role_obj.id)
             for permission in role_permissions:
-                await user_dao.change_permissions(session)
+                await user_dao.change_permissions(session, username, permission.report_id, permission.mode)
+            result = await role_dao.update_role(session, username, role.role)
             return result
 
 

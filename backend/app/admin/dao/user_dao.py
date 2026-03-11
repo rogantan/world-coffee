@@ -9,6 +9,7 @@ from app.admin.model.user import User
 from app.admin.enum.permission_mode import PermissionMode
 from app.admin.schema.user import UserRoleSchema
 from passlib.context import CryptContext
+from app.admin.enum.permission_mode import PermissionMode
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -60,7 +61,7 @@ class UserDAO(BaseDao[User]):
     #     return result.scalars().first()
 
     async def reset_permissions(self, db: AsyncSession, username: str):
-        query = select(UserPermission.id).where(User.uid == username).join(UserPermission.user_id == User.id)
+        query = select(UserPermission.id).where(User.uid == username).join(User, UserPermission.user_id == User.id)
         result = await db.execute(query)
         user_permissions = result.mappings().all()
         if user_permissions:
@@ -74,18 +75,23 @@ class UserDAO(BaseDao[User]):
             await db.commit()
         else:
             return None
-
-    async def update_role(self, db: AsyncSession, username: str, role: str):
-        new_role = self.select_one(db, name=role)
-        new_role_id = new_role["id"]
-        query = update(User).where(User.uid == username).values(role_id=new_role_id)
-        result = await db.execute(query)
-        await db.commit()
-        return result
     
-    async def change_permissions(self, db: AsyncSession, username: str, report: int, permission):
-        pass
+    async def change_permissions(self, db: AsyncSession, username: str, report: int, report_mode: PermissionMode):
+        query_permissions = (select(UserPermission.id)
+            .where(User.uid == username, Report.id == report)
+            .join(User, User.id == UserPermission.user_id)
+            .join(Report, Report.id == UserPermission.report_id))
+        result = await db.execute(query_permissions)
+        permissions = result.mappings().one_or_none()
 
-    
+        if permissions:
+            try:
+                query_update = update(UserPermission).where(UserPermission.id == permissions["id"]).values(mode=report_mode)
+                await db.execute(query_update)
+            except Exception as e:
+                await db.rollback()
+            await db.commit()
+        else:
+            print("No permission found")
     
 user_dao: UserDAO = UserDAO(User)
