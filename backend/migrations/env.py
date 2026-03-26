@@ -16,6 +16,9 @@ from app.admin.model.role import Role
 from app.admin.model.role_permission import RolePermission
 from app.admin.model.store import Store
 from app.reports.model.retail_store import RetailStore
+from app.directories.model.payment_purpose import PaymentPurpose
+from app.reports.model.payment_journal import PaymentJournal
+from app.dashboard.model.retail_demand import RetailDemand
 
 config = context.config
 

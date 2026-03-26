@@ -19,3 +19,11 @@ class RoleNotFoundException(APIException):
 class UserNotFoundException(APIException):
     status_code = status.HTTP_404_NOT_FOUND
     detail = "Пользователь не найден"
+
+class RetailStoreIdNotFoundException(APIException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Точка продаж с таким ID не найдена"
+
+class PaymentPurposeIdNotFoundException(APIException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Назначение платежа не найдено"

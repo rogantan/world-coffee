@@ -1,7 +1,7 @@
 from typing import TypeVar, Type, Generic
 from sqlalchemy import select, update, func, insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
+from typing import List, Dict
 
 Model = TypeVar("Model")
 
@@ -43,3 +43,29 @@ class BaseDao(Generic[Model]):
         query = select(self.model).filter_by(**filter)
         result = await db.execute(query)
         return result.scalars().one_or_none()
+    
+    async def find_by_id(self, db: AsyncSession, model_id: int | str) -> Model | None:
+        query = select(self.model).filter_by(id=model_id)
+        result = await db.execute(query)
+        return result.scalar()
+    
+    async def add(self, db: AsyncSession, **data: Dict) -> Model:
+        query = insert(self.model).values(**data)
+        result = await db.execute(query).returning(self.model)
+        await db.commit()
+        return result.scalars().one()
+    
+    async def delete(self, db: AsyncSession, model_id: int | str) -> None:
+        obj = await self.select_one(db, id=model_id)
+        await db.delete(obj)
+        await db.commit()
+
+    async def get_all_with_filter(
+        self,
+        db: AsyncSession,
+        order_by=None,
+        **filter: dict,
+    ) -> List[Model]:
+        query = select(self.model).filter_by(**filter).order_by(order_by)
+        result = await db.execute(query)
+        return result.scalars().all()

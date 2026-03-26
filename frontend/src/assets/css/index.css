@@ -1,0 +1,18 @@
+.auth-field {
+  /* background-image: url('../hero.png'); */
+  display: flex;
+  background-color: blue;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.auth-fluid-form-box {
+  /* background-color: black; */
+  /* opacity: 0.5; */
+  background-color: rgba(0, 0, 0, 0.1); 
+  /* width: 50vh;
+  height: 60vh; */
+  display:block;
+  padding: 5%;
+}
