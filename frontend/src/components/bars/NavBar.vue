@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-custom">
+  <div class="navbar-custom d-flex">
     <div class="topbar container-fluid">
       <!-- <div class="d-flex align-items-center gap-lg-2 gap-1">
         <div class="logo-light">
@@ -12,7 +12,7 @@
         </div>
       </div> -->
 
-      <button class="button-toogle-menu" @click="openNavigation">
+      <button class="btn" @click="openNavigation">
         <i class="ri-menu-2-fill"></i>
       </button>
 
@@ -23,13 +23,13 @@
       </button> -->
     </div>
 
-    <ul class="topbat-menu d-flex align-items-center ms-auto gap-3">
+    <ul class="topbat-menu d-flex align-items-center ms-auto gap-3 list-unstyled">
       <li class="dropdown">
-        <a class="nav-link dropdown-toggle arrow-none nav-user px-2" href="#" role="button">
-          <span>
+        <a class="nav-link arrow-none nav-user px-2" href="#" role="button">
+          <!-- <span>
             <img>
-          </span>
-          <span>
+          </span> -->
+          <span class="">
             <h5 class="my-0">{{ getUserRole(userStore?.user?.role) }}</h5>
             <!-- <h6></h6> -->
           </span>

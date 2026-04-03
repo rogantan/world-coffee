@@ -1,7 +1,8 @@
 <template>
   <div class="card mt-3 p-2">
-    <div>Домашняя страница <br>
-      Добро пожаловать, {{ userStore?.user?.name }}
+    <div>
+      <h2>Главная страница</h2>
+      <p>Добро пожаловать, {{ userStore.user?.name }}!</p>
     </div>
   </div>
 </template>

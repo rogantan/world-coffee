@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="card mt-3 p-2">
     <h2>{{ pageTitle }}</h2>
     <div>
       <table></table>

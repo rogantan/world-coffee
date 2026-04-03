@@ -46,6 +46,13 @@ const settingsRoutes: RouteRecordRaw[] = [
                 meta: {
                     name: "Проверка синхронизации"
                 }
+            },
+            {
+                path: 'users',
+                component: () => import("../components/settings/UserAccess.vue"),
+                meta: {
+                    name: "Пользователи"
+                }
             }
         ]
     }
@@ -66,6 +73,23 @@ const reportRoutes: RouteRecordRaw[] = [
     }
 ]
 
+const errorRoutes: RouteRecordRaw[] = [
+    {
+        path: '/error',
+        component: MainLayout,
+        children: [
+            {
+                path: 'access_denied',
+                component: () => import("../components/errors/AccessDenied.vue"),
+            },
+            {
+                path: 'not_found',
+                component: () => import("../components/errors/PageNotFound.vue"),
+            }
+        ]
+    }
+]
+
 const router: Router = createRouter({
     history: createWebHistory(''),
     routes: [
@@ -76,7 +100,8 @@ const router: Router = createRouter({
         ...loginRoutes,
         ...mainRoutes,
         ...reportRoutes,
-        ...settingsRoutes
+        ...settingsRoutes,
+        ...errorRoutes
     ]
 });
 router.beforeEach((to, from, next) => {

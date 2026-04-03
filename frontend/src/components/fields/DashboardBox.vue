@@ -39,12 +39,27 @@
       </div>
       <div>
         <span>LFL</span>
-        <span>{{ data.avg_ckeck.lfl }}</span>
+        <span>{{ data.avg_check.lfl }}</span>
       </div>
     </div>
     <div>
       <div>
-        
+        <span>Средняя выручка за день прошлый месяц</span>
+        <span>{{ data.avg_revenue.last_month }}</span>
+      </div>
+      <div>
+        <span>Средняя выручка за день текущий месяц</span>
+        <span>{{ data.avg_revenue.current_month }}</span>
+      </div>
+      <div>
+        <span>LFL</span>
+        <span>{{ data.avg_revenue.lfl }}</span>
+      </div>
+    </div>
+    <div>
+      <div>
+        <span>Среднее количество чеков за день прошлый месяц</span>
+        <span>{{ data.avg_checks_day. }}</span>
       </div>
     </div>
   </div>

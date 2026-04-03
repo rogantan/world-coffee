@@ -5,7 +5,7 @@
             <span>{{ label }}</span>
         </div>
     </label>
-    <div>
+    <div class="login">
         <input
         class="form-control"
         ref="input"

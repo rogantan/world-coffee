@@ -88,7 +88,7 @@ onMounted(() => {
 
       <form class="auth-field-right" @submit.prevent="handleLogin">
         <div class="">
-          <InputBox v-bind="validateOptions.username" :error="entity_errors.username" :modelValue="entity.username"
+          <InputBox class="login" v-bind="validateOptions.username" :error="entity_errors.username" :modelValue="entity.username"
           @update:modelValue="(value: any) => (entity.username = value)"></InputBox>
         </div>
         <div class="mt-3 m-auto">
