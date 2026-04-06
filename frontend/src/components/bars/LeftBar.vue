@@ -220,12 +220,12 @@ const menuReports = computed(() => {
 const menuDashboards = ref([
   {
     name: "Точка продаж 1",
-    path: "",
+    path: "/dashdoard/1",
     icon: ""
   },
   {
     name: "Точка продаж 2",
-    path: "",
+    path: "/dashboard/2",
     icon: ""
   }
 ]);
@@ -233,12 +233,12 @@ const menuDashboards = ref([
 const menuInventories = ref([
   {
     name: "Точка продаж 1",
-    path: "",
+    path: "/inventory/1",
     icon: ""
   },
   {
     name: "Точка продаж 2",
-    path: "",
+    path: "/inventory/2",
     icon: ""
   }
 ]);
