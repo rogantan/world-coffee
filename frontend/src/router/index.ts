@@ -58,6 +58,43 @@ const settingsRoutes: RouteRecordRaw[] = [
     }
 ]
 
+const listsRoutes: RouteRecordRaw[] = [
+    {
+        path: "/lists",
+        component: MainLayout,
+        children: [
+            {
+                path: "retail_stores",
+                component: () => import("../components/lists/RetailStores.vue"),
+                meta: {
+                    name: "Точки продаж"
+                }
+            },
+            {
+                path: "payment_purposes",
+                component: () => import("../components/lists/PaymentPurpose.vue"),
+                meta: {
+                    name: "Назначения платежа"
+                }
+            },
+            {
+                path: "bonuses",
+                component: () => import("../components/lists/Bonuses.vue"),
+                meta: {
+                    name: "Премии"
+                }
+            },
+            {
+                path: "salary",
+                component: () => import("../components/lists/Salary.vue"),
+                meta: {
+                    name: "Оплата за смену"
+                }
+            }
+        ]
+    }
+]
+
 const reportRoutes: RouteRecordRaw[] = [
     {
         path: '/reports',
@@ -90,6 +127,15 @@ const errorRoutes: RouteRecordRaw[] = [
     }
 ]
 
+const inventoryRoutes: RouteRecordRaw[] = [
+    {
+        path: '/error',
+        component: MainLayout,
+        children: [
+        ]
+    }
+]
+
 const router: Router = createRouter({
     history: createWebHistory(''),
     routes: [
@@ -99,6 +145,7 @@ const router: Router = createRouter({
         },
         ...loginRoutes,
         ...mainRoutes,
+        ...listsRoutes,
         ...reportRoutes,
         ...settingsRoutes,
         ...errorRoutes

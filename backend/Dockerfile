@@ -4,11 +4,12 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sSL https://install.python-poetry.org | python3 -
+# Устанавливаем poetry и настраиваем в одном RUN
+RUN curl -sSL https://install.python-poetry.org | python3 - && \
+    export PATH="/root/.local/bin:$PATH" && \
+    /root/.local/bin/poetry config virtualenvs.create false
 
 ENV PATH="/root/.local/bin:$PATH"
-
-RUN poetry config virtualenvs.create false
 
 COPY pyproject.toml poetry.lock* ./
 
