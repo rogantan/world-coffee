@@ -6,20 +6,33 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: always
     depends_on:
       - db
     env_file:
       - .env
+    volumes:
+      - migrations:/migrations/versions
     ports:
       - "14325:8000"
   db:
     image: postgres:14
+    restart: always
     env_file:
       - .env
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  redis:
+    image: redis:latest
+
+    volumes:
+      - redis_data:/var/lib/redis
+    ports:
+      - "6397:6397"
     
 volumes:
   db_data:
+  migrations:
+  redis_data:

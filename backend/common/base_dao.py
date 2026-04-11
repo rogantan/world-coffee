@@ -51,7 +51,7 @@ class BaseDao(Generic[Model]):
     
     async def add(self, db: AsyncSession, **data: Dict) -> Model:
         query = insert(self.model).values(**data)
-        result = await db.execute(query).returning(self.model)
+        result = await db.execute(query.returning(self.model))
         await db.commit()
         return result.scalars().one()
     

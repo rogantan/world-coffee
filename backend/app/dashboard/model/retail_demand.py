@@ -27,10 +27,10 @@ class RetailDemand(Base):
         Float, nullable=True
     )
     salesman_percent: Mapped[float] = mapped_column(Float, nullable=True)
-    moment: Mapped[datetime.datetime]
-    ms_created: Mapped[datetime.datetime]
-    ms_updated: Mapped[datetime.datetime]
-    updated_at: Mapped[datetime.datetime] = mapped_column(
+    moment: Mapped[datetime]
+    ms_created: Mapped[datetime]
+    ms_updated: Mapped[datetime]
+    updated_at: Mapped[datetime] = mapped_column(
         onupdate=func.timezone("UTC", func.now()),
         server_default=func.timezone("UTC", func.now()),
     )

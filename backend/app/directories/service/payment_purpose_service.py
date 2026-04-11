@@ -1,6 +1,6 @@
 from core.db_postgres import async_session
 from app.directories.dao.payment_purpose_dao import payment_purpose_dao
-from app.directories.schema.payment_purpose_schema import PaymentPurposeCreateSchema, PaymentPurposeUpdateSchema
+from app.directories.schema.payment_purpose_schema import PaymentPurposeCreateSchema
 
 class PaymentPurposeService:
 
@@ -14,7 +14,7 @@ class PaymentPurposeService:
             result = await payment_purpose_dao.add(session, **payment_purpose.model_dump())
             return result
 
-    async def edit_payment_purpose(self, row_id: int, payment_purpose: PaymentPurposeUpdateSchema):
+    async def edit_payment_purpose(self, row_id: int, payment_purpose: PaymentPurposeCreateSchema):
         async with async_session() as session:
             result = await payment_purpose_dao.update(session, row_id, **payment_purpose.model_dump())
             return result

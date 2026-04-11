@@ -18,7 +18,8 @@ from app.admin.model.store import Store
 from app.reports.model.retail_store import RetailStore
 from app.directories.model.payment_purpose import PaymentPurpose
 from app.reports.model.payment_journal import PaymentJournal
-from app.dashboard.model.retail_demand import RetailDemand
+# from app.dashboard.model.retail_demand import RetailDemand
+from app.directories.model.bonus import Bonus
 
 config = context.config
 
