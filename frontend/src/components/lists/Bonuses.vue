@@ -45,7 +45,7 @@
           <div class="data-block" v-else-if="row.isEditingBonus">
             <div class="data-item">
               <span>
-                <InputBox type="text" v-model="row.value" />
+                <InputBox type="number" v-model="row.value" />
               </span>
               <span>
                 <ButtonBox color="success" icon="ri-save-2-line" @click="editRecordBonus(row)" />

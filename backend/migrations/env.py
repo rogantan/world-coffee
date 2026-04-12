@@ -20,6 +20,7 @@ from app.directories.model.payment_purpose import PaymentPurpose
 from app.reports.model.payment_journal import PaymentJournal
 # from app.dashboard.model.retail_demand import RetailDemand
 from app.directories.model.bonus import Bonus
+from app.directories.model.salary import SalaryCondition
 
 config = context.config
 

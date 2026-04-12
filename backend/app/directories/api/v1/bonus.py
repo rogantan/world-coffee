@@ -2,11 +2,11 @@ from fastapi import APIRouter
 from app.admin.dependens.auth import CurrentUserDep
 from typing import List
 from app.directories.service.bonus_service import bonus_service
-from app.directories.schema.bonus_schema import BonusSchema
+from app.directories.schema.bonus_schema import BonusSchema, BonusEditSchema
 
 router = APIRouter(prefix="/bonuses", tags=["Справочник. Премии"])
 
-@router.get("")
+@router.get("", response_model=List[BonusEditSchema])
 async def get_bonus(user: CurrentUserDep):
   return await bonus_service.get_bonuses()
 
