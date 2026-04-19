@@ -140,11 +140,6 @@ const menuLists = ref([
     name: "Назначения платежей",
     icon: "",
     path: "/lists/payment_purposes"
-  },
-  {
-    name: "Оплата за смену",
-    icon: "",
-    path: "/lists/salary"
   }
 ]);
 
@@ -191,6 +186,21 @@ function hasAccessWrite(key: string) {
 
 const menuReports = computed(() => {
   const baseReports = [];
+  baseReports.push({
+      name: "Ревизор",
+      icon: "",
+      path: "/reports/auditor"
+    });
+  baseReports.push({
+      name: "Журнал продаж",
+      icon: "",
+      path: "/reports/sales-journal"
+    });
+  baseReports.push({
+    name: "Журнал платежей",
+    icon: "",
+    path: "/reports/payment-journal"
+  });
 
   if (hasAccess("auditor")) {
     baseReports.push({

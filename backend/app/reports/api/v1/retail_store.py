@@ -7,6 +7,6 @@ from app.reports.service.retail_store_service import retail_store_service
 
 router = APIRouter(prefix="/retail_stores", tags=["Справочник. Точки продаж"])
 
-@router.get("", response_model=List[RetailStoreSchema])
+@router.get("/salary", response_model=List[RetailStoreSchema])
 async def get_retail_stores(user: CurrentUserDep):
-    return await retail_store_service.get_retail_stores()
+    return await retail_store_service.get_retail_stores_with_salary()

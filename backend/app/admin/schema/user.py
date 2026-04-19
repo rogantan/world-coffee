@@ -57,3 +57,6 @@ class UserInDbSchema(UserCreateSchema):
 
 class UserRoleSchema(BaseModel):
     role: str
+
+class UserPermission(BaseModel):
+    permission: str

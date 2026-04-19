@@ -3,9 +3,9 @@ from core.db_postgres import async_session
 
 class RetailStoreService:
 
-    async def get_retail_stores(self):
+    async def get_retail_stores_with_salary(self):
         async with async_session() as session:
-            result = await retail_store_dao.get_all(session, order_by="name")
+            result = await retail_store_dao.get_retail_stores(session)
             return result
 
 

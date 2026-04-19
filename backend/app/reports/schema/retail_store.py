@@ -5,3 +5,4 @@ class RetailStoreSchema(BaseModel):
     id: UUID
     name: str
     archived: bool
+    salary_per_shift: float

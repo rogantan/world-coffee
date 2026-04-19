@@ -1,9 +1,9 @@
 import { apiService } from "../api";
-import type { tBonus, tRetailStore, tSalaryCondition } from "../../types/admin/lists";
+import type { tBonus, tRetailStore } from "../../types/admin/lists";
 import type { tPaymentPurpose } from "../../types/admin/lists";
 
 export const getRetailStores = async (): Promise<tRetailStore[]> =>
-  await apiService.get<tRetailStore[]>("/retail_stores");
+  await apiService.get<tRetailStore[]>("/retail_stores/salary");
 
 export const getPaymentPurpose = async(): Promise<tPaymentPurpose[]> => 
   await apiService.get<tPaymentPurpose[]>("/payment_purpose");
@@ -23,8 +23,5 @@ export const postBonuses = async(name: string, value: number) =>
 export const putBonuses = async(row_id: number, name: string, value: number) => 
   await apiService.put(`/bonuses/${row_id}`, {"name": name, "value": value});
 
-export const getSalary = async(): Promise<tSalaryCondition[]> => 
-  await apiService.get<tSalaryCondition[]>("/salary");
-
-// export const putSalary = async(row_id: number) =>
-//   await apiService.put(`/salary/${row_id}`, {})
+export const putSalary = async(row_id: string, new_salary: number) =>
+  await apiService.put(`/salary/${row_id}`, {"salary_per_shift": new_salary})

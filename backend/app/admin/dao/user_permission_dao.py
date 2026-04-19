@@ -31,9 +31,13 @@ class UserPermissionDao(BaseDao[UserPermission]):
         else:
             return None
         
-    async def change_permissions(self, db: AsyncSession, username: str, report: int, report_mode: PermissionMode):
+    async def change_permissions(self, db: AsyncSession, username: str, report_title: str, report_mode: PermissionMode):
+
+        if isinstance(report_mode, str):
+            report_mode = PermissionMode(report_mode)
+
         query_permissions = (select(UserPermission.id)
-            .where(User.uid == username, Report.id == report)
+            .where(User.uid == username, Report.title == report_title)
             .join(User, User.id == UserPermission.user_id)
             .join(Report, Report.id == UserPermission.report_id))
         result = await db.execute(query_permissions)

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from app.admin.schema.user import UserSchema, UserRoleSchema
+from app.admin.schema.user import UserPermission, UserSchema, UserRoleSchema
 from app.admin.dependens.auth import CurrentUserDep
 from app.admin.service.user_service import user_service
 from typing import List
@@ -36,6 +36,11 @@ async def update_role(username: str, role: UserRoleSchema, user: CurrentUserDep)
         )
     return await user_service.change_role(username, role)
 
-@router.post("/create_users")
-async def create():
-    pass
+@router.put("/{username}/report/{report_title}")
+async def change_permission(username: str, report_title: str, user: CurrentUserDep, permission: UserPermission):
+    if user.role != 'admin':
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only admin can update user role"
+        )
+    return await user_service.change_permission(username, report_title, permission)

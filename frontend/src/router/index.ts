@@ -83,12 +83,28 @@ const listsRoutes: RouteRecordRaw[] = [
                 meta: {
                     name: "Премии"
                 }
+            }
+        ]
+    }
+]
+
+const testRoutes: RouteRecordRaw[] = [
+    {
+        path: "/tests",
+        component: MainLayout,
+        children: [
+            {
+                path: '',
+                component: () => import("../components/tests/TestsPage.vue"),
+                meta: {
+                    name: "Тестирования"
+                }
             },
             {
-                path: "salary",
-                component: () => import("../components/lists/Salary.vue"),
+                path: 'result',
+                component: () => import("../components/tests/TestResult.vue"),
                 meta: {
-                    name: "Оплата за смену"
+                    name: "Результаты тестирований"
                 }
             }
         ]
@@ -99,14 +115,29 @@ const reportRoutes: RouteRecordRaw[] = [
     {
         path: '/reports',
         component: MainLayout,
-        // children: [
-        //     {
-        //         path: '',
-        //         meta: {
-        //             name: "frf"
-        //         }
-        //     }
-        // ]
+        children: [
+            {
+                path: 'auditor',
+                component: () =>  import("../components/reports/Auditor.vue"),
+                meta: {
+                    name: "Ревизор"
+                }
+            },
+            {
+                path: 'sales-journal',
+                component: () => import("../components/reports/SalesJournal.vue"),
+                meta: {
+                    name: "Журнал продаж"
+                }
+            },
+            {
+                path: 'payment-journal',
+                component: () => import("../components/reports/PaymentJournal.vue"),
+                meta: {
+                    name: "Журнал платежей"
+                }
+            }
+        ]
     }
 ]
 
@@ -148,7 +179,9 @@ const router: Router = createRouter({
         ...listsRoutes,
         ...reportRoutes,
         ...settingsRoutes,
-        ...errorRoutes
+        ...errorRoutes,
+        ...testRoutes,
+        ...inventoryRoutes
     ]
 });
 router.beforeEach((to, from, next) => {

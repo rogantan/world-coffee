@@ -1,9 +1,10 @@
-from app.admin.schema.user import UserRoleSchema
+from app.admin.schema.user import UserPermission, UserRoleSchema
 from app.admin.dao.role_dao import role_dao
 from common.exceptions.error import RoleNotFoundException, UserNotFoundException
 from core.db_postgres import async_session
 from app.admin.dao.user_dao import user_dao
 from app.admin.dao.role_permission_dao import role_permission_dao
+from app.admin.dao.user_permission_dao import user_permission_dao
 
 class UserService:
 
@@ -47,6 +48,11 @@ class UserService:
             for permission in role_permissions:
                 await user_dao.change_permissions(session, username, permission.report_id, permission.mode)
             result = await role_dao.update_role(session, username, role.role)
+            return result
+    
+    async def change_permission(self, username: str, report_title: str, permission: UserPermission):
+        async with async_session() as session:
+            result = await user_permission_dao.change_permissions(session, username, report_title, permission.permission)
             return result
 
 

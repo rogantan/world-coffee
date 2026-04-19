@@ -2,6 +2,7 @@ export type tRetailStore = {
   id: string
   name: string
   archived: boolean
+  salary_per_shift: number
 }
 
 export type tPaymentPurpose = {
@@ -17,6 +18,7 @@ export type tBonus = {
 
 export type tSalaryCondition = {
   id: number,
-  retail_store: string,
+  retail_store_id: string,
+  retail_store_name: string,
   salary_per_shift: number
 }
