@@ -26,7 +26,7 @@ export async function validateTest(
                 entityErrors.questions[qIndex] = { 
                     text: "", 
                     choices: [],
-                    correctAnswerRequired: ""
+                    correctChoiceRequired: ""
                 };
             }
 
@@ -66,7 +66,7 @@ export async function validateTest(
 
             // Проверка наличия правильного ответа
             if (!hasCorrectAnswer && question.choices && question.choices.length > 0) {
-                entityErrors.questions[qIndex].correctAnswerRequired = "Выберите хотя бы один правильный ответ";
+                entityErrors.questions[qIndex].correctChoiceRequired = "Выберите хотя бы один правильный ответ";
                 isValid = false;
             }
         });
