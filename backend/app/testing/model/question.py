@@ -12,7 +12,7 @@ class Question(Base):
   test_id: Mapped[int] = mapped_column(ForeignKey("test.id"))
 
   test = relationship("Test", back_populates="questions")
-  answer_options = relationship(
+  choices = relationship(
     "Choice",
     back_populates="question",
     cascade="all, delete",

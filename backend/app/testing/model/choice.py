@@ -12,7 +12,7 @@ class Choice(Base):
   text: Mapped[str]
   is_correct: Mapped[bool]
 
-  test_question = relationship("Question", back_populates="choices")
+  question = relationship("Question", back_populates="choices")
   user_answers = relationship(
     "UserAnswer",
     back_populates="choice",

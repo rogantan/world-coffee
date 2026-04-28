@@ -27,4 +27,4 @@ class UserAnswer(Base):
     ),
   )
 
-  answer_option = relationship("Choice", back_populates="user_answers")
+  choice = relationship("Choice", back_populates="user_answers")

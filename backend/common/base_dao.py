@@ -69,3 +69,33 @@ class BaseDao(Generic[Model]):
         query = select(self.model).filter_by(**filter).order_by(order_by)
         result = await db.execute(query)
         return result.scalars().all()
+    
+    async def find_all_with_filter(
+        self,
+        db: AsyncSession,
+        **filter: dict,
+    ) -> list[Model]:
+        """Поиск всех записей по фильтру"""
+        query = select(self.model).filter_by(**filter)
+        result = await db.execute(query)
+        return result.scalars().all()
+    
+    async def insert_uncommit(
+        self,
+        db: AsyncSession,
+        **data: dict,
+    ) -> Model:
+        """Добавление новой записи"""
+        query = insert(self.model).values(**data).returning(self.model)
+        data = await db.execute(query)
+        return data.scalars().one()
+    
+    async def find_one_or_none(
+        self,
+        db: AsyncSession,
+        **filter: dict,
+    ) -> Model | None:
+        """Поиск одной или никакой записи по фильтру"""
+        query = select(self.model).filter_by(**filter)
+        result = await db.execute(query)
+        return result.scalars().one_or_none()

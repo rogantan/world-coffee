@@ -106,6 +106,13 @@ const testRoutes: RouteRecordRaw[] = [
                 meta: {
                     name: "Результаты тестирований"
                 }
+            },
+            {
+                path: 'create',
+                component: () => import("../components/tests/admin/TestCreatePage.vue"),
+                meta: {
+                    name: "Добавление тестирования"
+                }
             }
         ]
     }

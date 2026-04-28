@@ -21,6 +21,11 @@ from app.reports.model.payment_journal import PaymentJournal
 # from app.dashboard.model.retail_demand import RetailDemand
 from app.directories.model.bonus import Bonus
 from app.directories.model.salary import SalaryCondition
+from app.testing.model.choice import Choice
+from app.testing.model.question import Question
+from app.testing.model.test import Test
+from app.testing.model.test_result import TestResult
+from app.testing.model.user_answer import UserAnswer
 
 config = context.config
 

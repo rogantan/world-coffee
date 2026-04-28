@@ -27,3 +27,27 @@ class RetailStoreIdNotFoundException(APIException):
 class PaymentPurposeIdNotFoundException(APIException):
     status_code = status.HTTP_404_NOT_FOUND
     detail = "Назначение платежа не найдено"
+
+class TestNoActiveException(APIException):
+    status_code = status.HTTP_403_FORBIDDEN
+    detail = "Тест еще не открыт или уже закрыт"
+
+class TestAlreadyPassedException(APIException):
+    status_code = status.HTTP_403_FORBIDDEN
+    detail = "Тест уже был пройден"
+
+class NoAnswerToQuestionException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "На какой-то из вопросов не выбрано ни одного ответа"
+
+class AnswerOptionNotFoundException(APIException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Вариант ответа c таким ID не найден или отсутствует в тесте"
+
+class TestNameAlreadyExistsException(APIException):
+    status_code = status.HTTP_409_CONFLICT
+    detail = "Тест с таким именем уже существует"
+
+class InvalidOrderByValueException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Некорректное значение сортировки"
