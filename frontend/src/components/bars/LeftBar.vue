@@ -73,7 +73,7 @@
               </a>
               </li>
 
-              <li class="side-nav-title" v-if="userRole === 'admin'">Инвентаризации</li>
+              <li class="side-nav-title">Инвентаризации</li>
               <li class="side-nav-item" v-if="userRole === 'admin'" v-for="menuList in menuInventories" 
               :key="menuList.name" @click="navigateTo(menuList.path, menuList.name, 'lists')" :class="{
                 'menuitem-active': activeMenu?.category === 'lists' && activeMenu.name === menuList.name,

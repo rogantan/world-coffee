@@ -99,3 +99,12 @@ class BaseDao(Generic[Model]):
         query = select(self.model).filter_by(**filter)
         result = await db.execute(query)
         return result.scalars().one_or_none()
+    
+    async def delete_uncommit(
+        self,
+        db: AsyncSession,
+        model_id: int | str,
+    ) -> None:
+        """Удаление записи по id"""
+        obj = await self.select_one(db, id=model_id)
+        await db.delete(obj)

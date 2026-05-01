@@ -67,8 +67,11 @@ async def delete_test(user: CurrentUserDep, test_id: int):
 
   if user.role not in ["admin", "senior_salesman"]:
     raise ForbiddenException
-
-  return await test_service.delete_test(test_id)
+  
+  await test_service.delete_test(test_id)
+  return {
+    "code": 200
+  }
 
 @router.get("/{test_id}/result/{user_id}", response_model=STestResult)
 async def get_test_result_for_admin(user: CurrentUserDep, test_id: int, user_id: UUID):

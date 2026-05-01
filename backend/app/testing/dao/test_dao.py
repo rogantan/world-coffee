@@ -1,7 +1,7 @@
 from typing import List
 from app.testing.dao.test_result_dao import test_result_dao
 from app.testing.dao.choice_dao import choice_dao
-from app.testing.schema.test import SCreateTest
+from app.testing.schema.test import SCreateTest, SUpdateTest
 from app.testing.dao.question_dao import question_dao
 from common.base_dao import BaseDao
 from app.testing.model.test import Test
@@ -14,7 +14,7 @@ from app.testing.dao.user_answer_dao import user_answer_dao
 from sqlalchemy import Boolean, case, cast, select, text, update, delete, func
 from sqlalchemy.orm import selectinload
 from common.exceptions.error import InvalidOrderByValueException, NoAnswerToQuestionException, AnswerOptionNotFoundException, TestNameAlreadyExistsException
-from datetime import timedelta, date
+from datetime import UTC, datetime, timedelta, date
 from uuid import UUID
 
 class TestDao(BaseDao[Test]):
@@ -392,5 +392,111 @@ class TestDao(BaseDao[Test]):
         )
         result = await db.execute(query)
         return result.mappings().all()
+  
+  async def update_test(
+        self,
+        db: AsyncSession,
+        test_id: int,
+        updated_test: SUpdateTest,
+        has_changes_in_questions: bool,
+    ):
+        """Изменение теста, вопросов и ответов"""
+        # async with async_session_maker() as session:
+        existing_test = await self.select_one(db, id=test_id)
+        if not existing_test:
+            raise TestNotFoundException
+        updated_test = SUpdateTest(**updated_test)
+
+        existing_test.name = updated_test.name
+        existing_test.date_from = updated_test.date_from
+        existing_test.date_to = updated_test.date_to
+
+        # если были изменения в вопросах и ответах теста
+        # и тест был уже кем-то пройден,
+        # тогда все результаты сбрасываются,
+        # а в тесте result_resets становится True
+        if has_changes_in_questions:
+            if result_ids := await self.get_answer_ids_by_test_id(db, test_id):
+                existing_test.result_resets = True
+                for result_id in result_ids:
+                    await user_answer_dao.delete_uncommit(db, result_id)
+
+                test_result_ids = await test_result_dao.get_ids(db, test_id=test_id)
+                for test_result_id in test_result_ids:
+                    await test_result_dao.delete_uncommit(db, test_result_id)
+
+            updated_question_ids = set()
+            existing_question_ids = set(
+                await question_dao.get_ids(db, test_id=test_id)
+            )
+
+            for question in updated_test.questions:
+                if question.id is None:
+                    # если нет id, то создаем новый вопрос и варианты ответа
+                    existing_question = await question_dao.insert_uncommit(
+                        db, test_id=test_id, text=question.text
+                    )
+                    for option in question.answer_options:
+                        await choice_dao.insert_uncommit(
+                            db,
+                            test_question_id=existing_question.id,
+                            text=option.text,
+                            is_correct=option.is_correct,
+                        )
+
+                else:
+                    # если есть id, то обновляем вопрос
+                    existing_question = await question_dao.select_one(
+                        db, id=question.id, test_id=test_id
+                    )
+                    if not existing_question:
+                        raise QuestionNotFoundException
+
+                    existing_question.text = question.text
+
+                    updated_option_ids = set()
+                    existing_option_ids = set(
+                        await choice_dao.get_ids(
+                            db, test_question_id=question.id
+                        )
+                    )
+
+                    for option in question.answer_options:
+                        if option.id is None:
+                            # если нет id, то создаем новый вариант ответа
+                            await choice_dao.insert_uncommit(
+                                db,
+                                test_question_id=question.id,
+                                text=option.text,
+                                is_correct=option.is_correct,
+                            )
+                        else:
+                            # если есть id, то обновляем вариант ответа
+                            existing_option = await choice_dao.select_one(
+                                db,
+                                id=option.id,
+                                test_question_id=question.id,
+                            )
+                            if not existing_option:
+                                raise AnswerOptionNotFoundException
+
+                            existing_option.text = option.text
+                            existing_option.is_correct = option.is_correct
+
+                            updated_option_ids.add(option.id)
+
+                    # удаление вариантов ответов,
+                    # которых нет в обновленном списке
+                    for option_id in existing_option_ids - updated_option_ids:
+                        await choice_dao.delete_uncommit(db, option_id)
+
+                    updated_question_ids.add(question.id)
+
+            for question_id in existing_question_ids - updated_question_ids:
+                await question_dao.delete_uncommit(db, question_id)
+
+        existing_test.updated_at = datetime.now(UTC).replace(tzinfo=None)
+
+        await db.commit()
 
 test_dao: TestDao = TestDao(Test)
