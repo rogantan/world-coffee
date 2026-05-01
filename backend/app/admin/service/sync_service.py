@@ -21,5 +21,11 @@ class SyncService:
     async def update_sync(self, synch_id: int, status: Status):
         async with async_session.begin() as session:
             return await synchronization_dao.update(session, synch_id, status=status, finish_time=datetime.now(UTC).replace(tzinfo=None))
+    
+    async def find_last_successful_update(self) -> str:
+        async with async_session.begin() as db:
+            last_update = await synchronization_dao.find_last_successful_update(db)
+        if last_update:
+            return last_update.start_time.strftime("%Y-%m-%d %H:%M:%S")
 
 sync_service: SyncService = SyncService()

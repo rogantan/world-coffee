@@ -186,21 +186,21 @@ function hasAccessWrite(key: string) {
 
 const menuReports = computed(() => {
   const baseReports = [];
-  baseReports.push({
-      name: "Ревизор",
-      icon: "",
-      path: "/reports/auditor"
-    });
-  baseReports.push({
-      name: "Журнал продаж",
-      icon: "",
-      path: "/reports/sales-journal"
-    });
-  baseReports.push({
-    name: "Журнал платежей",
-    icon: "",
-    path: "/reports/payment-journal"
-  });
+  // baseReports.push({
+  //     name: "Ревизор",
+  //     icon: "",
+  //     path: "/reports/auditor"
+  //   });
+  // baseReports.push({
+  //     name: "Журнал продаж",
+  //     icon: "",
+  //     path: "/reports/sales-journal"
+  //   });
+  // baseReports.push({
+  //   name: "Журнал платежей",
+  //   icon: "",
+  //   path: "/reports/payment-journal"
+  // });
 
   if (hasAccess("auditor")) {
     baseReports.push({
@@ -216,7 +216,7 @@ const menuReports = computed(() => {
       path: "/reports/sales-journal"
     });
   }
-  if (hasAccess("cash_journal") || hasAccessWrite("cash_journal")) {
+  if (hasAccess("payment_journal") || hasAccessWrite("payment_journal")) {
     baseReports.push({
       name: "Журнал платежей",
       icon: "",

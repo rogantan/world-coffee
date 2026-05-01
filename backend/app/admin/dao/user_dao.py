@@ -1,6 +1,9 @@
+from datetime import datetime
 from app.admin.model.user_permission import UserPermission
 from app.reports.model.report import Report
 from app.admin.model.role import Role
+from app.admin.dao.salary_increase_dao import salary_increase_dao
+from utils.date_formatter import ms_date_to_datetime
 from common.base_dao import BaseDao
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload, selectinload
@@ -10,6 +13,7 @@ from app.admin.enum.permission_mode import PermissionMode
 from app.admin.schema.user import UserRoleSchema
 from passlib.context import CryptContext
 from app.admin.enum.permission_mode import PermissionMode
+from app.admin.dao.user_permission_dao import user_permission_dao
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -93,5 +97,41 @@ class UserDAO(BaseDao[User]):
             await db.commit()
         else:
             print("No permission found")
+    
+    async def get_user_by_id(
+        self,
+        db: AsyncSession,
+        id: str,
+        archived: bool,
+    ):
+        return await self.find_one_or_none(db, id=id, archived=archived)
+    
+    async def add_new_entity(self, db: AsyncSession, entity, role_id: int):
+        await self.insert_uncommit(
+            db,
+            id=entity.get("id"),
+            name=entity.get("fullName"),
+            role_id=role_id,
+            uid=entity.get("uid"),
+            last_name=entity.get("lastName"),
+            first_name=entity.get("firstName"),
+            middle_name=entity.get("middleName"),
+            hash_password=entity.get("externalCode"),
+            registered=False,
+            has_eighteen_months=False,
+            email=entity.get("email"),
+            archived=entity.get("archived"),
+            ms_created=ms_date_to_datetime(entity.get("created")),
+            ms_updated=ms_date_to_datetime(entity.get("updated")),
+        )
+
+        await user_permission_dao.set_permissions(db, entity.get("uid"), role_id)
+        await salary_increase_dao.insert_uncommit(
+            db,
+            user_id=entity.get("id"),
+            created_at=datetime(year=2000, month=1, day=1),
+        )
+
+        await db.commit()
     
 user_dao: UserDAO = UserDAO(User)

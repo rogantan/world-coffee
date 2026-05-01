@@ -108,3 +108,20 @@ class BaseDao(Generic[Model]):
         """Удаление записи по id"""
         obj = await self.select_one(db, id=model_id)
         await db.delete(obj)
+
+    async def update_one_uncommit(
+        self,
+        db: AsyncSession,
+        model_id: int | str,
+        **data: dict,
+    ) -> Model:
+        """Обновление записи по id"""
+        query = (
+            update(self.model)
+            .where(self.model.id == model_id)
+            .values(**data)
+            .returning(self.model)
+        )
+        data = await db.execute(query)
+        await db.commit()
+        return data.scalars().one()

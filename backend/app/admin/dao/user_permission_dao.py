@@ -1,7 +1,10 @@
 from common.base_dao import BaseDao
 from app.admin.model.user_permission import UserPermission
+from app.admin.model.role_permission import RolePermission
+from app.admin.model.role import Role
 from app.admin.enum.permission_mode import PermissionMode
-from sqlalchemy import select, update
+# from app.admin.dao.user_dao import user_dao
+from sqlalchemy import select, update, insert
 from app.reports.model.report import Report
 from app.admin.model.user import User
 from core.db_postgres import AsyncSession
@@ -52,6 +55,18 @@ class UserPermissionDao(BaseDao[UserPermission]):
             await db.commit()
         else:
             print("No permission found")
+
+    async def set_permissions(self, db: AsyncSession, username: str, role_id: int):
+        query_role_permissions = select(RolePermission.report_id, RolePermission.mode).where(RolePermission.role_id == role_id)
+        result = await db.execute(query_role_permissions)
+        role_permissions = result.mappings().all()
+
+        from app.admin.dao.user_dao import user_dao
+        user = await user_dao.find_one_or_none(db, uid=username)
+        for role_permission in role_permissions:
+            query_set = insert(UserPermission).values(user_id=user.id, report_id=role_permission.report_id, mode=role_permission.mode)
+            await db.execute(query_set)
+        await db.commit()
 
 
 user_permission_dao: UserPermissionDao = UserPermissionDao(UserPermission)
