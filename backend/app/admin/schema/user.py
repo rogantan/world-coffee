@@ -60,3 +60,7 @@ class UserRoleSchema(BaseModel):
 
 class UserPermission(BaseModel):
     permission: str
+
+class EmployeeSchema(BaseModel):
+    id: UUID
+    name: str

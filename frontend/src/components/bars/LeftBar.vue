@@ -11,11 +11,11 @@
                     <img>
                   </div>
                   <div class="flex-grow-1 ms-2">
-                    <span class="fw-semibold fs-15 d-block">{{ userName }}</span>
+                    <span class="fw-semibold fs-15 d-block text-secondary side-nav-title">{{ userName }}</span>
                   </div>
                 </a>
               </div>
-            </div>
+            
 
             <ul class="side-nav">
               <li class="side-nav-title" v-if="userRole === 'admin'">Настройки</li>
@@ -84,6 +84,7 @@
               </a>
               </li>
             </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -128,17 +129,17 @@ const menuSettings = ref([
 const menuLists = ref([
   {
     name: "Точки продаж",
-    icon: "",
+    icon: "ri-store-line",
     path: "/lists/retail_stores"
   },
   {
     name: "Премии",
-    icon: "",
+    icon: "ri-gift-fill",
     path: "/lists/bonuses"
   },
   {
     name: "Назначения платежей",
-    icon: "",
+    icon: "ri-money-euro-box-line",
     path: "/lists/payment_purposes"
   }
 ]);
@@ -148,7 +149,7 @@ const menuTests = computed(() => {
   if (userRole.value === "admin") {
     baseTests.push({
       name: "Тесты",
-      icon: "",
+      icon: "ri-a-b",
       path:"/tests"
     });
   }
@@ -157,7 +158,7 @@ const menuTests = computed(() => {
     || userRole.value === "senior_salesman") {
       baseTests.push({
         name: "Результаты тестов",
-        icon: "",
+        icon: "ri-equal-fill",
         path: "/tests/result"
       });
   }
@@ -180,46 +181,31 @@ function hasAccess(key: string) {
 
 function hasAccessWrite(key: string) {
   return userAccess.value.some(
-    (x) => x.title === key && x.display_name === "editable"
+    (x) => x.title === key && x.mode === "editable"
   );
 }
 
 const menuReports = computed(() => {
   const baseReports = [];
-  // baseReports.push({
-  //     name: "Ревизор",
-  //     icon: "",
-  //     path: "/reports/auditor"
-  //   });
-  // baseReports.push({
-  //     name: "Журнал продаж",
-  //     icon: "",
-  //     path: "/reports/sales-journal"
-  //   });
-  // baseReports.push({
-  //   name: "Журнал платежей",
-  //   icon: "",
-  //   path: "/reports/payment-journal"
-  // });
 
   if (hasAccess("auditor")) {
     baseReports.push({
       name: "Ревизор",
-      icon: "",
+      icon: "ri-chat-check-line",
       path: "/reports/auditor"
     });
   }
   if (hasAccess("sales_journal")) {
     baseReports.push({
       name: "Журнал продаж",
-      icon: "",
+      icon: "ri-discount-percent-line",
       path: "/reports/sales-journal"
     });
   }
   if (hasAccess("payment_journal") || hasAccessWrite("payment_journal")) {
     baseReports.push({
       name: "Журнал платежей",
-      icon: "",
+      icon: "ri-wallet-line",
       path: "/reports/payment-journal"
     });
   }
@@ -231,12 +217,12 @@ const menuDashboards = ref([
   {
     name: "Точка продаж 1",
     path: "/dashdoard/1",
-    icon: ""
+    icon: "ri-dashboard-3-line"
   },
   {
     name: "Точка продаж 2",
     path: "/dashboard/2",
-    icon: ""
+    icon: "ri-dashboard-3-line"
   }
 ]);
 
@@ -244,12 +230,12 @@ const menuInventories = ref([
   {
     name: "Точка продаж 1",
     path: "/inventory/1",
-    icon: ""
+    icon: "ri-file-list-2-line"
   },
   {
     name: "Точка продаж 2",
     path: "/inventory/2",
-    icon: ""
+    icon: "ri-file-list-2-line"
   }
 ]);
 

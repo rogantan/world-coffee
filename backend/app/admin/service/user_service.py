@@ -112,4 +112,8 @@ class UserService:
             if user and not user.archived:
                 await user_dao.update(db, user.id, archived=True)
 
+    async def list_employees(self):
+        async with async_session() as session:
+            return await user_dao.get_employees(session)
+
 user_service: UserService = UserService()

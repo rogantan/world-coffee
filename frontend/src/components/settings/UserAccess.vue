@@ -21,7 +21,7 @@
           <div v-else class="data-block">
             <div class="data-item">
               <span>
-                {{ row.salaryCoefficient }}
+                {{ row.salary_coefficient }}
               </span>
               <span>
                 <ButtonBox v-if="row.salaryCoefficient" color="warning" icon="ri-edit-box-line"
@@ -97,7 +97,7 @@ interface SelectTypeRole {
 }
 type RoleTypes = SelectTypeRole[];
 const getSelectOptions = (header: string) => {
-  if (header === 'paymentJournal') {
+  if (header === 'payment_journal') {
     return selectOptionsEditable.value;
   }
   return selectOptions.value;
@@ -141,9 +141,9 @@ const headers = ref<Headers>({
     class: "lemon",
     sort: false
   },
-  salaryCoefficient: {
+  salary_coefficient: {
     title: "Коэффициент к окладу",
-    key: "salaryCoefficient",
+    key: "salary_coefficient",
     class: "lemon",
     sort: false,
   },
@@ -159,15 +159,15 @@ const headers = ref<Headers>({
     class: "lemon",
     sort: false,
   },
-  salesJournal: {
+  sales_journal: {
     title: "Журнал продаж",
-    key: "salesJournal",
+    key: "sales_journal",
     class: "lemon",
     sort: false,
   },
-  paymentJournal: {
+  payment_journal: {
     title: "Журнал платежей",
-    key: "paymentJournal",
+    key: "payment_journal",
     class: "lemon",
     sort: false
   }
@@ -190,7 +190,7 @@ const getPermissions = async () => {
         id: user.id,
         name: user.name,
         email: user.email,
-        // salaryCoefficient: user. || '',
+        // salary_coefficient: user.salary_coefficent,
         // salaryCoefficientEdit: false,
         resetPwd: user.uid || '',
         role: user.role,
@@ -244,6 +244,37 @@ const resetPwd = async (uid: string) => {
     notificationService.addNotification({
       title: 'Ошибка сброса пароля',
       message: 'Не удалось сбросить пароль. Попробуйте снова.',
+      type: 'error',
+    });
+  }
+};
+
+const handlePermissionChange = async (row: EmployerRow, key: string, newValue: string) => {
+  let options = selectOptions.value;
+  if (key === 'payment_journal') {
+    options = selectOptionsEditable.value;
+  }
+  // const selectedPermission = selectOptions.value.find(option => option.value === newValue);
+
+  const selectedPermission = options.find(option => option.value === newValue);
+
+  if (!selectedPermission) {
+    return;
+  }
+  try {
+    // const response = 
+    await ApiUser.changeUserPermission(row.uid, key, newValue);
+    // if (response.status === 200) {
+    notificationService.addNotification({
+      title: 'Права на таблицу изменены',
+      message: `Пользователь ${row.uid} получил статус ${newValue}.`,
+      type: 'success',
+    });
+    // }
+  } catch (error) {
+    notificationService.addNotification({
+      title: 'Ошибка изменения прав пользователя',
+      message: 'Не удалось изменить права доступа.',
       type: 'error',
     });
   }

@@ -40,7 +40,6 @@ import { notificationService } from '../../api/notify';
 import { tests } from '../../api/index'
 import { format } from 'date-fns';
 
-
 const router = useRouter();
 
 const headers = ref({
@@ -83,17 +82,9 @@ const getAllTests = async () => {
   }
 }
 
-// function handleSort(sortKey: string) {
-//   // console.log('Новый ключ сортировки:', sortKey);
-// }
-
 function createTest() {
   router.push('/tests/create');
 }
-
-// const startTest = async (test_id: number) => {
-//   router.push({ name: 'TestStarted', query: { test_id: test_id.toString() } });
-// }
 
 const editTest = async (test_id: number) => {
   router.push({ name: 'TestEdit', query: { test_id: test_id.toString() } });
@@ -122,12 +113,6 @@ onMounted(async () => {
   await getAllTests();
 });
 
-// onBeforeMount(async () => {
-//   const role = await getRole();
-//   if (role !== 'admin' && role !== "salesman" && role !== "senior_salesman") {
-//     router.push('/access-deny')
-//   }
-// });
 </script>
 
 <style scoped>

@@ -170,30 +170,18 @@ function getCellClass(row: any, key: any, index: any) {
 .flex-container {
   display: flex;
   justify-content: space-between;
-  /* Распределяет элементы так, что один прижат к левому краю, другой к правому */
   align-items: center;
-  /* Выравниваем элементы по центру по вертикали */
   width: 100%;
 }
 
-/* .scrollable-horizontal {
-  overflow: auto;
-  position: absolute;
-  inset: 0;
-} */
 .scrollable-horizontal {
   overflow: auto;
-  /* -webkit-overflow-scrolling: touch; */
-  /* max-height: 75vh; */
-  /* height: 100%; */
-  /* overflow-y: auto; */
 }
 
 .static-col {
   position: sticky !important;
   left: 0px;
   z-index: 2;
-  /* --ct-table-border-color: #cfd0d2; */
   --ct-table-bg: #ffffff;
 }
 
@@ -204,11 +192,8 @@ function getCellClass(row: any, key: any, index: any) {
   right: 0;
   bottom: 0;
   width: 1px;
-  /* Ширина границы */
   background: #e9ecef;
-  /* Цвет границы */
   z-index: 3;
-  /* Убедитесь, что z-index выше, чем у других элементов в таблице */
 }
 
 .minh {
@@ -242,22 +227,18 @@ function getCellClass(row: any, key: any, index: any) {
 
 .bg-yellow {
   --ct-table-bg: #fff3cd;
-  /* light yellow */
 }
 
 .bg-lemon {
   --ct-table-bg: #fdd244;
-  /*  yellow */
 }
 
 .bg-lemon-h {
   background-color: #fdd244 !important;
-  /*  yellow */
   --ct-table-bg: #fdd244;
 }
 
 .icon-large {
   font-size: 28px;
-  /* или другой размер */
 }
 </style>

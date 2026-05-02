@@ -424,9 +424,10 @@ body {
   border-right: 0px solid #dee2e6;
   -webkit-transition: all 0.25s ease-in-out;
   transition: all 0.25s ease-in-out;
-  overflow-y: auto; /* 👈 Главное свойство для прокрутки */
-  overflow-x: hidden; /* Скрыть горизонтальную прокрутку */
-  height: 100vh; /* Фиксированная высота */
+  overflow-y: auto; 
+  overflow-x: hidden;
+  min-height: 200vh;
+  height: auto;
 }
 
 .simplebar-wrapper {
@@ -1059,4 +1060,14 @@ html[data-sidenav-size=fullscreen]:not([data-layout=topnav]) .content-page {
 }
 a {
   text-decoration: none;
+}
+
+/* Запрещаем скрывать текст пунктов меню */
+html[data-sidenav-size=condensed] .side-nav-link span {
+  visibility: visible !important;
+}
+
+/* Запрещаем скрывать заголовки */
+html[data-sidenav-size=condensed] .side-nav-title {
+  display: block !important;
 }

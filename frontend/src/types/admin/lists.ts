@@ -22,3 +22,8 @@ export type tSalaryCondition = {
   retail_store_name: string,
   salary_per_shift: number
 }
+
+export type tEmployee = {
+  id: string,
+  name: string
+}

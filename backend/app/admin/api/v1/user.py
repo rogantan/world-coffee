@@ -1,10 +1,19 @@
 from fastapi import APIRouter, HTTPException, status
-from app.admin.schema.user import UserPermission, UserSchema, UserRoleSchema
+from app.admin.schema.user import EmployeeSchema, UserPermission, UserSchema, UserRoleSchema
 from app.admin.dependens.auth import CurrentUserDep
 from app.admin.service.user_service import user_service
 from typing import List
 
 router = APIRouter(prefix="/user", tags=["Настройки пользователей"])
+
+@router.get("/employees", response_model=List[EmployeeSchema])
+async def list_employees(user: CurrentUserDep):
+    if user.role != 'admin':
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only admin and accountant can get employee list"
+        )
+    return await user_service.list_employees()
 
 @router.get("/me", response_model=UserSchema, response_model_exclude="hash_password", summary="Получение информации о текущем пользователе")
 async def get_current_user(user: CurrentUserDep):

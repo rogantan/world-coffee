@@ -2,6 +2,7 @@
 from datetime import UTC, datetime
 from app.admin.service.sync_service import sync_service
 from app.admin.service.user_service import user_service
+from app.admin.service.store_service import store_service
 from common.my_storage import get_session
 from core.config import settings
 from app.admin.enum.status import Status
@@ -21,7 +22,7 @@ class StorageSync:
         logger.info("Синхронизация user завершена")
 
         logger.info("Запуск синхронизации store")
-        #
+        await store_service.storage_update(ms_client, up_time)
         logger.info("Синхронизация store завершена")
 
         logger.info("Запуск синхронизации retail_store")

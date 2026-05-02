@@ -9,12 +9,12 @@ router = APIRouter(prefix="/payment_journal", tags=["Отчет. Журнал п
 
 @router.get("", response_model=List[PaymentJournalSchema])
 async def get_payments_journal(user: CurrentUserDep,
-    payment_date_from: date,
-    payment_date_to: date,
-    accrual_date_from: date,
-    accrual_date_to: date,
-    order_by: str,
-    desc: bool):
+    payment_date_from: date | None = None,
+    payment_date_to: date | None = None,
+    accrual_date_from: date | None = None,
+    accrual_date_to: date | None = None,
+    order_by: str = "payment_date",
+    desc: bool = False):
     return await payment_journal_service.get(payment_date_from, payment_date_to, accrual_date_from, accrual_date_to, order_by, desc)
 
 @router.post("")

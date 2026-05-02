@@ -1,6 +1,11 @@
 import { apiService } from "../api";
 import type { tBonus, tRetailStore } from "../../types/admin/lists";
 import type { tPaymentPurpose } from "../../types/admin/lists";
+import type { tEmployee } from "../../types/admin/lists";
+
+
+export const getEmployees = async (): Promise<tEmployee[]> => 
+  await apiService.get<tEmployee[]>("/user/employees");
 
 export const getRetailStores = async (): Promise<tRetailStore[]> =>
   await apiService.get<tRetailStore[]>("/retail_stores/salary");

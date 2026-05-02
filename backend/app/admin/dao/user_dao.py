@@ -133,5 +133,10 @@ class UserDAO(BaseDao[User]):
         )
 
         await db.commit()
+
+    async def get_employees(self, db: AsyncSession):
+        query = select(User.id, User.name)
+        result = await db.execute(query)
+        return result.mappings().all()
     
 user_dao: UserDAO = UserDAO(User)
