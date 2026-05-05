@@ -11,7 +11,7 @@
                     <img>
                   </div>
                   <div class="flex-grow-1 ms-2">
-                    <span class="fw-semibold fs-15 d-block text-secondary side-nav-title">{{ userName }}</span>
+                    <span class="fw-bold fs-5 text-secondary side-nav-title">{{ userName }}</span>
                   </div>
                 </a>
               </div>

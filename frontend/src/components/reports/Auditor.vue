@@ -45,26 +45,21 @@
 <script setup lang="ts">
 import { onMounted, computed, ref } from 'vue'
 import { useRoute } from 'vue-router';
-import TableContent from '@/components/table/TableContent.vue'
-import DateBox from '@/components/fields/DateBox.vue';
-import ButtonBox from '@/components/fields/ButtonBox.vue';
-import InputBox from '@/components/fields/InputBox.vue';
-import { ApiReport } from '@/api/index'
+import TableContent from '../fields/table/TableContent.vue'
+import DateBox from '../fields/DateBox.vue';
+import ButtonBox from '../fields/ButtonBox.vue';
+import InputBox from '../fields/InputBox.vue';
+// import { ApiReport } from '@/api/index'
 // import { formatOnlyDate } from '@/utils/date_formatter'
 // import { useLoading } from '@/utils/loadingMixin';
-import { useAuditorStore } from '@/store/report/auditor';
+// import { useAuditorStore } from '@/store/report/auditor';
 import { format } from 'date-fns'
 
 const route = useRoute();
 const pageTitle = computed(() => route.meta.name as string);
-// const { isLoading, loadingOptions, startLoading, stopLoading } = useLoading();
 const isEditManual = ref<string | null>(null);
 
-const reportStore = useAuditorStore()
-// const dateRange = ref(
-//   [new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-//   new Date()]
-// );
+// const reportStore = useAuditorStore()
 
 const headers = {
   name: {
@@ -164,18 +159,17 @@ const headers = {
 }
 
 
-const handleManualChanges = async (row: any) => {
-  const response = await ApiReport.putManualChanges(row.uuid, row.manual_changes)
-  if (response) {
-    row.retention_sum = response.retention_sum
-    isEditManual.value = null;
-  }
-}
+// const handleManualChanges = async (row: any) => {
+//   const response = await ApiReport.putManualChanges(row.uuid, row.manual_changes)
+//   if (response) {
+//     row.retention_sum = response.retention_sum
+//     isEditManual.value = null;
+//   }
+// }
 
 onMounted(async () => {
   document.title = pageTitle.value
-  // reportStore.reportName = 'auditor'
-  reportStore.get()
+  // reportStore.get()
 })
 </script>
 

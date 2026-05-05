@@ -26,15 +26,15 @@ export interface Test {
   }
   
 export interface TestErrors {
-    name?: string;
-    date_from?: string;
-    date_to?: string;
+    name?: string | undefined;
+    date_from?: string | undefined;
+    date_to?: string | undefined;
     questions: Array<{
-      text?: string;
+      text?: string | undefined;
       choices?: Array<{
-        text?: string;
-        is_correct?: boolean;
+        text?: string | undefined;
+        is_correct?: boolean | undefined;
       }>;
-      correctChoiceRequired?: string;
-    }>;
+      correctChoiceRequired?: string | undefined;
+    }> | undefined;
   }

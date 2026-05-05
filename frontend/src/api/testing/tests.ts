@@ -9,13 +9,13 @@ export const getTests = async (): Promise<tTestResult[]> =>
 export const createTest = async (data: any) =>
   await apiService.post("/test/admin/create", data);
 
-export const getTest = async (test_id: number): Promise<Test> =>
+export const getTest = async (test_id: any): Promise<Test> =>
   await apiService.get<Test>(`/test/admin/${test_id}`);
 
 export const getStartedTest = async (test_id: number) =>
   await apiService.get(`/test/admin/${test_id}`, { test_id: test_id });
 
-export const editTest = async (test_id: number, test_data: any): Promise<null> =>
+export const editTest = async (test_id: any, test_data: any): Promise<null> =>
   await apiService.put<null>(`/test/admin/${test_id}/edit`, test_data);
 
 export const deleteTest = async (test_id: number) =>
