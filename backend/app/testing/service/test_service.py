@@ -12,7 +12,7 @@ from datetime import date
 class TestService:
   async def get_test(self, test_id: int):
     async with async_session() as session:
-      return await test_dao.find_by_id(session, test_id)
+      return await test_dao.get_test(session, test_id)
     
   async def is_test_active(self, test_id: int):
     async with async_session() as session:

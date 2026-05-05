@@ -19,4 +19,10 @@ class Store(Base):
         server_default=func.timezone("UTC", func.now())
     )
 
+    inventories = relationship(
+        "Inventory",
+        back_populates="store",
+        cascade="all, delete-orphan"
+    )
+
     retail_stores = relationship("RetailStore", back_populates="store")

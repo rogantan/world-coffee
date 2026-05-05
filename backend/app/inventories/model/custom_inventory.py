@@ -6,9 +6,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.inventories.model.custom_inventory_item import CustomInventoryItem
-from common.model import MappedBase
+from common.model import Base
 
-class CustomInventory(MappedBase):
+class CustomInventory(Base):
   __tablename__ = "custom_inventory"
 
   id: Mapped[int] = mapped_column(primary_key=True)

@@ -9,11 +9,10 @@ class RetailDemand(Base):
     __tablename__ = "retail_demand"
 
     id: Mapped[str] = mapped_column(UUID, primary_key=True)
-    agent_type = Mapped[str]
+    agent_name: Mapped[str] = mapped_column(String(255))
     retail_store_id: Mapped[str] = mapped_column(ForeignKey("retail_store.id"))
     owner_id: Mapped[Optional[str]] = mapped_column(ForeignKey("user.id"), index=True, nullable=True)
     senior_salesman_id: Mapped[Optional[str]] = mapped_column(ForeignKey("user.id"), nullable=True)
-    organization_name: Mapped[Optional[str]] = mapped_column(String(255))
     applicable: Mapped[bool]
     name: Mapped[str] = mapped_column(String(255))
     cash_sum: Mapped[float]
@@ -21,12 +20,7 @@ class RetailDemand(Base):
     payed_sum: Mapped[float]
     qr_sum: Mapped[float]
     sum: Mapped[float]
-    discounts: Mapped[float] = mapped_column(default=0)
-    senior_salesman_percent: Mapped[float] = mapped_column(Float, nullable=True)
-    senior_salesman_personal_percent: Mapped[float] = mapped_column(
-        Float, nullable=True
-    )
-    salesman_percent: Mapped[float] = mapped_column(Float, nullable=True)
+    discounts: Mapped[float]
     moment: Mapped[datetime]
     ms_created: Mapped[datetime]
     ms_updated: Mapped[datetime]
@@ -34,6 +28,6 @@ class RetailDemand(Base):
         onupdate=func.timezone("UTC", func.now()),
         server_default=func.timezone("UTC", func.now()),
     )
-    created_at: Mapped[datetime.datetime] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         server_default=func.timezone("UTC", func.now())
     )

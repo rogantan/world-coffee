@@ -51,3 +51,15 @@ class TestNameAlreadyExistsException(APIException):
 class InvalidOrderByValueException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     detail = "Некорректное значение сортировки"
+
+class TestNotFoundException(APIException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Тестирование не найдено"
+
+class QuestionNotFoundException(APIException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Вопрос не найден"
+
+class UnprocessableEntity(APIException):
+    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+    detail = "Фактический остаток меньше, чем сумма продаж"

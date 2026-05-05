@@ -18,7 +18,7 @@ from app.admin.model.store import Store
 from app.reports.model.retail_store import RetailStore
 from app.directories.model.payment_purpose import PaymentPurpose
 from app.reports.model.payment_journal import PaymentJournal
-# from app.dashboard.model.retail_demand import RetailDemand
+from app.dashboard.model.retail_demand import RetailDemand
 from app.directories.model.bonus import Bonus
 from app.directories.model.salary import SalaryCondition
 from app.testing.model.choice import Choice
@@ -26,6 +26,9 @@ from app.testing.model.question import Question
 from app.testing.model.test import Test
 from app.testing.model.test_result import TestResult
 from app.testing.model.user_answer import UserAnswer
+from app.inventories.model.custom_inventory import CustomInventory
+from app.inventories.model.custom_inventory_item import CustomInventoryItem
+from app.inventories.model.inventory import Inventory
 
 config = context.config
 

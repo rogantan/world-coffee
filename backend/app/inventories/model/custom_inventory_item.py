@@ -8,9 +8,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from common.model import MappedBase
+from common.model import Base
 
-class CustomInventoryItem(MappedBase):
+class CustomInventoryItem(Base):
   __tablename__ = "custom_inventory_item"
 
   id: Mapped[int] = mapped_column(primary_key=True)
@@ -20,7 +20,7 @@ class CustomInventoryItem(MappedBase):
   actual_balance: Mapped[int] = mapped_column(default=0, server_default="0")
   sales: Mapped[int] = mapped_column(default=0, server_default="0")
   closing_balance: Mapped[int] = mapped_column(
-    Computed("actual_balance - sale1 - sale2 - sale3 - sale4")
+    Computed("actual_balance - sales")
   )
   meta: Mapped[dict] = mapped_column(JSON)
   updated_at: Mapped[datetime] = mapped_column(

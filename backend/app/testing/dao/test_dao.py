@@ -13,7 +13,7 @@ from app.testing.model.test_result import TestResult
 from app.testing.dao.user_answer_dao import user_answer_dao
 from sqlalchemy import Boolean, case, cast, select, text, update, delete, func
 from sqlalchemy.orm import selectinload
-from common.exceptions.error import InvalidOrderByValueException, NoAnswerToQuestionException, AnswerOptionNotFoundException, TestNameAlreadyExistsException
+from common.exceptions.error import InvalidOrderByValueException, NoAnswerToQuestionException, AnswerOptionNotFoundException, QuestionNotFoundException, TestNameAlreadyExistsException, TestNotFoundException
 from datetime import UTC, datetime, timedelta, date
 from uuid import UUID
 
@@ -151,7 +151,9 @@ class TestDao(BaseDao[Test]):
   
   async def delete_test(self, db: AsyncSession, test_id: int):
     """Удаление теста"""
-    query = delete(self.model).where()
+    exist_test = await self.select_one(db, id=test_id)
+    await db.delete(exist_test)
+    await db.commit()
   
   async def create_test(
     self,
@@ -196,7 +198,7 @@ class TestDao(BaseDao[Test]):
       .options(
         selectinload(Test.questions)
         .selectinload(Question.choices)
-        .selectinload(Choice.user_answer)
+        .selectinload(Choice.user_answers)
       )
       .where(Test.id == test_id)
     )

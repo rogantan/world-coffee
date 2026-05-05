@@ -8,11 +8,6 @@ router = APIRouter(prefix="/user", tags=["Настройки пользоват�
 
 @router.get("/employees", response_model=List[EmployeeSchema])
 async def list_employees(user: CurrentUserDep):
-    if user.role != 'admin':
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admin and accountant can get employee list"
-        )
     return await user_service.list_employees()
 
 @router.get("/me", response_model=UserSchema, response_model_exclude="hash_password", summary="Получение информации о текущем пользователе")

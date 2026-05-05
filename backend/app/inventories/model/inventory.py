@@ -11,10 +11,10 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from common.model import MappedBase
+from common.model import Base
 
 
-class Inventory(MappedBase):
+class Inventory(Base):
   __tablename__ = "inventory"
 
   id: Mapped[str] = mapped_column(UUID, primary_key=True, default=uuid.uuid4)
@@ -24,7 +24,6 @@ class Inventory(MappedBase):
 
   positive_correction_sum: Mapped[float]
   negative_correction_sum: Mapped[float]
-  manual_changes: Mapped[float] = mapped_column(default=0, server_default="0")
   retention_sum: Mapped[float] = mapped_column(server_default="0")
 
   name: Mapped[str] = mapped_column(String(255))

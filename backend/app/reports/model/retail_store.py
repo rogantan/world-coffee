@@ -1,6 +1,6 @@
 from sqlalchemy import String, UUID, func, ForeignKey
 from common.model import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 
 class RetailStore(Base):
@@ -12,3 +12,6 @@ class RetailStore(Base):
     store_id: Mapped[str] = mapped_column(ForeignKey("store.id"))
     archived: Mapped[bool]
     ms_updated: Mapped[datetime]
+
+    store: Mapped["Store"] = relationship( # type: ignore
+        "Store", back_populates="retail_stores") 

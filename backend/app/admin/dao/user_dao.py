@@ -139,4 +139,14 @@ class UserDAO(BaseDao[User]):
         result = await db.execute(query)
         return result.mappings().all()
     
+    async def get_senior_salesman(self, db: AsyncSession):
+        query = (
+            select(self.model)
+            .join(Role, self.model.role_id == Role.id)
+            .where(Role.name == "senior_salesman", User.archived == False)
+            .limit(1)
+        )
+        result = await db.execute(query)
+        return result.scalars().first()
+    
 user_dao: UserDAO = UserDAO(User)
