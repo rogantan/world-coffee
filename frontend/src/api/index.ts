@@ -5,7 +5,8 @@ import * as tests from './testing/tests.ts'
 import * as lists from './admin/listst.ts'
 import * as payment_journal from './reports/payment_journal.ts'
 import * as sales_journal from './reports/sales_journal.ts'
-
+import * as dashboard from './dashboards/dashboard.ts'
+import * as auditor from './reports/auditor.ts'
 
 export {
     auth,
@@ -14,5 +15,7 @@ export {
     test_user,
     payment_journal,
     lists,
-    sales_journal
+    sales_journal,
+    dashboard,
+    auditor
 }

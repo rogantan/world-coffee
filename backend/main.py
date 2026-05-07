@@ -13,7 +13,7 @@ scheduler = AsyncIOScheduler()
 async def lifespan(app: FastAPI):
     scheduler.add_job(
         storage_sync.start_synchronization,
-        CronTrigger(minute=24, hour='*', second=0),
+        CronTrigger(minute=41, hour='*', second=0),
         id="sync_storage"
     )
     scheduler.start()

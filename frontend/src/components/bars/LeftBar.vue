@@ -216,7 +216,7 @@ const menuReports = computed(() => {
 const menuDashboards = ref([
   {
     name: "Точка продаж 1",
-    path: "/dashdoard/1",
+    path: "/dashboard/1",
     icon: "ri-dashboard-3-line"
   },
   {

@@ -14,5 +14,5 @@ class SAuditReport(BaseModel):
   loss_sum: float
   enter_sum: float
   link: str
-  manual_changes: float
+  # manual_changes: float
   retention_sum: float

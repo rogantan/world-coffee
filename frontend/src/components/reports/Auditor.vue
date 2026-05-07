@@ -17,7 +17,7 @@
         <template #name-cell="{ row }">
           <a :href="row.link">{{ row.name }}</a>
         </template>
-        <template #manual_changes-cell="{ row }">
+        <!-- <template #manual_changes-cell="{ row }">
           <div v-if="isEditManual === row.uuid" class="data-item">
             <InputBox type="text" v-model="row.manual_changes" />
             <ButtonBox color="success" icon="ri-save-2-line" @click="handleManualChanges(row)" />
@@ -27,7 +27,7 @@
             {{ row.manual_changes }}
             <ButtonBox color="warning" icon="ri-edit-box-line" @click="isEditManual = row.uuid" />
           </div>
-        </template>
+        </template> -->
         <template #date-cell="{ row }">
           {{ format(row.date, 'dd.MM.yyyy') }}
         </template>
@@ -49,17 +49,16 @@ import TableContent from '../fields/table/TableContent.vue'
 import DateBox from '../fields/DateBox.vue';
 import ButtonBox from '../fields/ButtonBox.vue';
 import InputBox from '../fields/InputBox.vue';
-// import { ApiReport } from '@/api/index'
-// import { formatOnlyDate } from '@/utils/date_formatter'
+import { formatOnlyDate } from '../../utils/date_formatter'
 // import { useLoading } from '@/utils/loadingMixin';
-// import { useAuditorStore } from '@/store/report/auditor';
+import { useAuditorStore } from '../../store/reports/auditor';
 import { format } from 'date-fns'
 
 const route = useRoute();
 const pageTitle = computed(() => route.meta.name as string);
 const isEditManual = ref<string | null>(null);
 
-// const reportStore = useAuditorStore()
+const reportStore = useAuditorStore()
 
 const headers = {
   name: {
@@ -126,14 +125,6 @@ const headers = {
       desc: 'enter_sum-desc',
     },
   },
-  manual_changes: {
-    title: "Ручные изменения",
-    key: "manual_changes",
-    class: "lemon",
-    width: 200,
-    sort: false,
-  },
-
   retention_sum: {
     title: "Удержание итог",
     key: "retention_sum",
@@ -169,7 +160,7 @@ const headers = {
 
 onMounted(async () => {
   document.title = pageTitle.value
-  // reportStore.get()
+  reportStore.get()
 })
 </script>
 

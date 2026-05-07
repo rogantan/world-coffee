@@ -27,19 +27,6 @@ export const startTest = async (test_id: number) =>
 export const finishTest = async (test_id: number, answers: any) =>
   await apiService.put(`/test/passing/${test_id}/finish`, answers);
 
-// export const getTestsResult = async (date_from: string, date_to: string) =>
-//     await apiService.get(`/tests/result?date_from=${date_from}&date_to=${date_to}`);
-
-// export const getFilteredTestsResult = async (
-//     date_from: string,
-//     date_to: string,
-//     order_date: string,
-//     order_by: string,
-//     desc: boolean
-// ) => {
-//     await apiService.get(`/tests/result?date_from=${date_from}&date_to=${date_to}&order_date=${order_date}&order_by=${order_by}&desc=${desc}`);
-// }
-
 export const getTestsDateResult = async (params: any) =>
   await apiService.get(
     `/test/user/result?date_from=${params.date_from}&date_to=${params.date_to}&order_by=rank&desc=false`
@@ -54,4 +41,3 @@ export const getResultByUser = async (test_id: number, user_id: string) =>
 export const getResultByMonth = async (date: string, user_id: string): Promise<any[]> =>
   await apiService.get<any[]>(`test/admin/tests_in_month?date=${date}&user_id=${user_id}`);
 
-// /silkovback/tests / tests_in_month

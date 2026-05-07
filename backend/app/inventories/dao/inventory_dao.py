@@ -9,6 +9,7 @@ from app.admin.model.store import Store
 from app.reports.model.retail_store import RetailStore
 from common.base_dao import BaseDao
 from utils.date_formatter import ms_date_to_datetime
+from app.admin.dao.user_dao import user_dao
 
 class InventoryDao(BaseDao[Inventory]):
   # model = Inventory
@@ -70,51 +71,46 @@ class InventoryDao(BaseDao[Inventory]):
   ):
     """Создание новой записи"""
 
-    salesman_ids = await self.get_salesman_ids(entity)
-    print(salesman_ids)
-    if not salesman_ids:
-      return
-
     positive_correction_sum = 0
     negative_correction_sum = 0
 
     if enters := entity.get("enters"):
       positive_correction_sum = (
-        sum(enter.get("sum", 0) for enter in enters) / len(salesman_ids) / 100
+        sum(enter.get("sum", 0) for enter in enters) / 100
       )
 
     if losses := entity.get("losses"):
       negative_correction_sum = -(
-        sum(loss.get("sum", 0) for loss in losses) / len(salesman_ids) / 100
+        sum(loss.get("sum", 0) for loss in losses) / 100
       )
 
-    for salesman_id in salesman_ids:
-      retention_sum = (negative_correction_sum + positive_correction_sum) * -0.6
-      retention_sum = max(retention_sum, 0)
-      await self.add(
-        db,
-        ms_id=entity.get("id"),
-        store_id=self.get_id_from_object(entity, "store"),
-        salesman_id=salesman_id,
-        positive_correction_sum=positive_correction_sum,
-        negative_correction_sum=negative_correction_sum,
-        retention_sum=retention_sum,
-        name=entity.get("name"),
-        uuid_href=entity.get("meta").get("uuidHref"),
-        moment=ms_date_to_datetime(entity.get("moment")),
-        ms_updated=ms_date_to_datetime(entity.get("updated")),
-      )
+    salesman = await user_dao.find_one_or_none(db, name=entity.get("description", ""))
+    
+    if salesman is None:
+      return
+    print(salesman.id)
+    retention_sum = (negative_correction_sum + positive_correction_sum) * -0.6
+    retention_sum = max(retention_sum, 0)
+    await self.add(
+      db,
+      ms_id=entity.get("id"),
+      store_id=self.get_id_from_object(entity, "store"),
+      salesman_id=salesman.id,
+      positive_correction_sum=positive_correction_sum,
+      negative_correction_sum=negative_correction_sum,
+      retention_sum=retention_sum,
+      name=entity.get("name"),
+      uuid_href=entity.get("meta").get("uuidHref"),
+      moment=ms_date_to_datetime(entity.get("moment")),
+      ms_updated=ms_date_to_datetime(entity.get("updated")),
+    )
 
   async def update_entity(self, db, entity):
     """Обновление записи"""
     inventories = await self.find_all_with_filter(db, ms_id=entity.get("id"))
     for inventory in inventories:
       await self.delete(db, inventory.id)
-
-    salesman_ids = await self.get_salesman_ids(entity)
-    if not salesman_ids:
-      return
-
+      
     await self.add_new_entity(
       db=db,
       entity=entity,

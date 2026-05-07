@@ -156,6 +156,31 @@ const reportRoutes: RouteRecordRaw[] = [
     }
 ]
 
+const dashboardRoutes: RouteRecordRaw[] = [
+    {
+        path: '/dashboard',
+        component: MainLayout,
+        children: [
+            {
+                path: "1",
+                component: () => import("../components/reports/DashboardPage.vue"),
+                meta: {
+                    name: "Точка продаж",
+                    back_url: "Точка продаж"
+                }
+            },
+            {
+                path: "2",
+                component: () => import("../components/reports/DashboardPage.vue"),
+                meta: {
+                    name: "Кофе enjoy",
+                    back_url: "Кофе enjoy"
+                }
+            }
+        ]
+    }
+]
+
 const errorRoutes: RouteRecordRaw[] = [
     {
         path: '/error',
@@ -175,9 +200,25 @@ const errorRoutes: RouteRecordRaw[] = [
 
 const inventoryRoutes: RouteRecordRaw[] = [
     {
-        path: '/error',
+        path: '/inventory',
         component: MainLayout,
         children: [
+            {
+                path: "1",
+                component: () => import("../components/inventory/InventoryPage.vue"),
+                meta: {
+                    name: "Инвентаризация Точка продаж",
+                    back_url: "Точка продаж"
+                }
+            },
+            {
+                path: "2",
+                component: () => import("../components/inventory/InventoryPage.vue"),
+                meta: {
+                    name: "Инвентаризация Кофе enjoy",
+                    back_url: "Кофе enjoy"
+                }
+            }
         ]
     }
 ]
@@ -196,6 +237,7 @@ const router: Router = createRouter({
         ...settingsRoutes,
         ...errorRoutes,
         ...testRoutes,
+        ...dashboardRoutes,
         ...inventoryRoutes
     ]
 });

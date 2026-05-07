@@ -1071,3 +1071,7 @@ html[data-sidenav-size=condensed] .side-nav-link span {
 html[data-sidenav-size=condensed] .side-nav-title {
   display: block !important;
 }
+
+a:hover {
+  cursor: pointer;
+}
