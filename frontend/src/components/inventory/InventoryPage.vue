@@ -16,7 +16,7 @@
         </div>
       </div>
     </h2>
-    <TableContent :headers="headers" :data="data">
+    <TableContent :headers="headers" :data="inventoryStore.inventories">
       <template #sales-cell="{ row }">
         <div v-if="role === 'salesman' || role === 'admin'">
           <InputBox type="number" step=".01" v-model="row.sales" @update:modelValue="(value: any) => handleInputChange(row, 'sales', value)" />
@@ -48,12 +48,15 @@ import Notify from '../modals/Notify.vue';
 import { useRoute } from 'vue-router';
 import { notificationService } from '../../api/notify';
 import { useUserStore } from '../../store/user';
+import { useInventoryStore } from '../../store/inventory/inventory';
 
 const route = useRoute();
 const pageTitle = computed(() => route.meta.name);
 const backUrl = computed(() => route.meta.back_url);
 const showConfirmDialog = ref(false);
 const role = useUserStore().user?.role;
+
+const inventoryStore = useInventoryStore();
 
 const data = ref([]);
 
@@ -146,6 +149,7 @@ const handleInputChange = debounce((row: any, key: string, value: number) => {
 
 onMounted(async () => {
   document.title = pageTitle.value as string;
+  inventoryStore.get();
 })
 </script>
 

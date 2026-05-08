@@ -15,3 +15,6 @@ class RetailStore(Base):
 
     store: Mapped["Store"] = relationship( # type: ignore
         "Store", back_populates="retail_stores") 
+    
+    custom_inventory: Mapped["CustomInventory"] = relationship( # type: ignore
+        "CustomInventory", back_populates="retail_store")

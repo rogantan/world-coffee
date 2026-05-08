@@ -21,7 +21,6 @@ class StorageSync:
       up_time = await sync_service.find_last_successful_update()
       #up_time = datetime(year=2025, month=9, day=1)
       async with get_session(login=settings.MS_LOGIN, password=settings.MS_PASSWORD) as ms_client:
-        pass
         logger.info("Запуск синхронизации user")
         await user_service.storage_update(ms_client, up_time)
         logger.info("Синхронизация user завершена")

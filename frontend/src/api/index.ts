@@ -7,6 +7,7 @@ import * as payment_journal from './reports/payment_journal.ts'
 import * as sales_journal from './reports/sales_journal.ts'
 import * as dashboard from './dashboards/dashboard.ts'
 import * as auditor from './reports/auditor.ts'
+import * as inventory from './inventory/inventory.ts'
 
 export {
     auth,
@@ -17,5 +18,6 @@ export {
     lists,
     sales_journal,
     dashboard,
-    auditor
+    auditor,
+    inventory
 }

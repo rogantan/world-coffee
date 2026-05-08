@@ -5,6 +5,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from contextlib import asynccontextmanager
 from utils.storage_sync import storage_sync
+from utils.inventory_sync import inventory_sync
 
 
 scheduler = AsyncIOScheduler()
@@ -13,8 +14,13 @@ scheduler = AsyncIOScheduler()
 async def lifespan(app: FastAPI):
     scheduler.add_job(
         storage_sync.start_synchronization,
-        CronTrigger(minute=41, hour='*', second=0),
+        CronTrigger(minute=20, hour='*', second=0),
         id="sync_storage"
+    )
+    scheduler.add_job(
+        inventory_sync.start_update,
+        CronTrigger(minute=40, hour='*', second=0),
+        id="sync_inventory"
     )
     scheduler.start()
     yield

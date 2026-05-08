@@ -103,7 +103,7 @@ const props = defineProps<Props>()
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #c0f3c4aa;
+  background-color: #f3c0c0aa;
   padding: 10px;
   border-radius: 5px;
 }
