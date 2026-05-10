@@ -122,6 +122,22 @@ const testRoutes: RouteRecordRaw[] = [
                     name: 'Редактирование теста'
                 }
             },
+            {
+                name: 'TestStarted',
+                path: 'started',
+                component: () => import('../components/tests/TestStartedPage.vue'),
+                meta: {
+                    name: 'Тестирование'
+                }
+            },
+            {
+                name: 'TestsShowResult',
+                path: 'result-show',
+                component: () => import("../components/tests/TestShowResultPage.vue"),
+                meta: {
+                    name: "Результаты теста"
+                }
+            }
         ]
     }
 ]
@@ -150,6 +166,27 @@ const reportRoutes: RouteRecordRaw[] = [
                 component: () => import("../components/reports/PaymentJournal.vue"),
                 meta: {
                     name: "Журнал платежей"
+                }
+            },
+            {
+                path: "revenue-month",
+                component: () => import("../components/reports/RevenueMonthPage.vue"),
+                meta: {
+                    name: "Выручка в месяц"
+                }
+            },
+            {
+                path: "shift-day",
+                component: () => import("../components/reports/ShiftDayPage.vue"),
+                meta: {
+                    name: "Подсчёт смен (день)"
+                }
+            },
+            {
+                path: 'shift-month',
+                component: () => import("../components/reports/ShiftMonthPage.vue"),
+                meta: {
+                    name: "Подсчёт смен (месяц)"
                 }
             }
         ]

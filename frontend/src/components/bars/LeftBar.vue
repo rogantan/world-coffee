@@ -7,9 +7,6 @@
             <div class="simplebar-content">
               <div class="leftbar-user p-3 text-white">
                 <a class="d-flex alogn-items-center text-reset">
-                  <div class="flex-shrink-0">
-                    <img>
-                  </div>
                   <div class="flex-grow-1 ms-2">
                     <span class="fw-bold fs-5 text-secondary side-nav-title">{{ userName }}</span>
                   </div>
@@ -40,7 +37,8 @@
               </a>
               </li>
 
-              <li class="side-nav-title" v-if="userRole === 'admin'">Тестирование</li>
+              <li class="side-nav-title" v-if="userRole === 'admin' || userRole === 'salesman' || userRole === 'senior_salesman' || 
+              userRole === 'accountant'">Тестирование</li>
               <li class="side-nav-item" v-for="menuList in menuTests" 
               :key="menuList.name" @click="navigateTo(menuList.path, menuList.name, 'lists')" :class="{
                 'menuitem-active': activeMenu?.category === 'lists' && activeMenu.name === menuList.name,
@@ -74,7 +72,7 @@
               </li>
 
               <li class="side-nav-title">Инвентаризации</li>
-              <li class="side-nav-item" v-if="userRole === 'admin'" v-for="menuList in menuInventories" 
+              <li class="side-nav-item" v-for="menuList in menuInventories" v-if="userRole === 'admin' || userRole === 'salesman' || userRole === 'auditor'"
               :key="menuList.name" @click="navigateTo(menuList.path, menuList.name, 'lists')" :class="{
                 'menuitem-active': activeMenu?.category === 'lists' && activeMenu.name === menuList.name,
               }">
@@ -146,30 +144,21 @@ const menuLists = ref([
 
 const menuTests = computed(() => {
   const baseTests = [];
-  if (userRole.value === "admin") {
+  if (userRole.value === "admin" || userRole.value === 'salesman' || userRole.value === 'senior_salesman' ) {
     baseTests.push({
       name: "Тесты",
       icon: "ri-a-b",
       path:"/tests"
     });
   }
-
-  if (userRole.value === "admin" || userRole.value === "salesman" 
-    || userRole.value === "senior_salesman") {
-      baseTests.push({
-        name: "Результаты тестов",
-        icon: "ri-equal-fill",
-        path: "/tests/result"
-      });
-  }
-
-  if (userRole.value === "salesman") {
+  if (userRole.value === "admin" || userRole.value === 'salesman' || userRole.value === 'senior_salesman' || userRole.value === 'accountant' ) {
     baseTests.push({
-      name: "Пройти тест",
-      icon: "",
-      path: "/tests/start"
+      name: "Результаты тестов",
+      icon: "ri-equal-fill",
+      path: "/tests/result"
     });
   }
+
   return baseTests;
 });
 

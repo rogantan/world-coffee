@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 
-class SInventory(BaseModel):
+class SInventoryEdit(BaseModel):
+  actual_balance: int
+  sales: int
+
+class SInventory(SInventoryEdit):
   id: int
   product_name: str
   price: float | int
-  actual_balance: int
-  sales: int = 0
   closing_balance: int = 0

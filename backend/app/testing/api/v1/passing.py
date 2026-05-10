@@ -27,9 +27,9 @@ async def start_test(user: CurrentUserDep, test_id: int):
 
 @router.put("/{test_id}/finishing")
 async def finish_test(user: CurrentUserDep, test_id: int, answer_options_ids: List[int]):
-  if user.role not in ["admin", "salesman"]:
+  if user.role not in ["admin", "salesman", "senior_salesman"]:
     raise ForbiddenException
-  return test_service.finish_test(user, test_id, answer_options_ids)
+  return await test_service.finish_test(user, test_id, answer_options_ids)
 
 @router.get("/{test_id}/result")
 async def get_test_result(user: CurrentUserDep, test_id: int):

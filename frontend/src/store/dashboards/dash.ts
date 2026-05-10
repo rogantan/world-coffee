@@ -17,11 +17,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       month_start: formatOnlyDate(dates.value[0])
     };
     try {
-      const response = 1;
-      if (response) {
-        dashboardData.value = await dashboard.getDashboard(filters)
-        return response
-      }
+      dashboardData.value = await dashboard.getDashboard(filters)
     } catch (error) {
       console.log(error)
     }

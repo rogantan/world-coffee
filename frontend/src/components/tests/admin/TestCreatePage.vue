@@ -128,9 +128,6 @@ import { tests } from '../../../api';
 import { validateTest } from '../../../utils/test_validate';
 import { formatOnlyDate } from '../../../utils/date_formatter';
 
-/* =======================
-   TYPES
-======================= */
 
 type Choice = {
   text: string;
@@ -165,18 +162,12 @@ type TestErrors = {
   questions: QuestionError[];
 };
 
-/* =======================
-   ROUTER
-======================= */
 
 const route = useRoute();
 const router = useRouter();
 
 const pageTitle = computed<string>(() => route.meta.name as string);
 
-/* =======================
-   STATE
-======================= */
 
 const dateRange = ref<[Date, Date]>([
   new Date(new Date().getFullYear(), new Date().getMonth(), 1),
@@ -209,9 +200,6 @@ const entityErrors = reactive<TestErrors>({
   ]
 });
 
-/* =======================
-   HANDLERS
-======================= */
 
 const onNameChange = (value: string) => {
   test.value.name = value;
@@ -237,9 +225,6 @@ const handleDateChange = (range: [Date, Date]) => {
   dateRange.value = range;
 };
 
-/* =======================
-   CRUD
-======================= */
 
 const addQuestion = () => {
   test.value.questions.push({
@@ -275,9 +260,6 @@ const removeAnswer = (qIndex: number, aIndex: number) => {
   entityErrors.questions[qIndex].choices.splice(aIndex, 1);
 };
 
-/* =======================
-   VALIDATION + API
-======================= */
 
 const createTest = async () => {
   if (!(await validateTest(test, entityErrors))) return;
@@ -319,10 +301,6 @@ const createTest = async () => {
     }
   }
 };
-
-/* =======================
-   INIT
-======================= */
 
 onMounted(() => {
   document.title = pageTitle.value;

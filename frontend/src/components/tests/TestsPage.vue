@@ -4,7 +4,7 @@
       {{ pageTitle }}
     </h2>
     <div class="card">
-      <div>
+      <div v-if="role === 'admin'">
         <ButtonBox title="Создать тест" @click="createTest" />
       </div>
 
@@ -16,9 +16,21 @@
               <span>
                 {{ row.testsAvaibale }}
               </span>
-              <span>
+              <span v-if="role == 'admin'">
                 <ButtonBox icon="ri-edit-box-line" color="warning" @click="editTest(row.testsEdit)" />
                 <ButtonBox icon="ri-delete-back-line" color="danger" @click="deleteTest(row.testsRemove)" />
+              </span>
+              <span>
+                <ButtonBox v-if="!row.archived && row.active"
+                  title="Начать тест"
+                  @click="startTest(row.testsStart)"
+                  />
+              </span>
+              <span>
+                <ButtonBox v-if="row.archived"
+                  title="Результаты"
+                  @click="resultTest(row.testsStart)"
+                  />
               </span>
             </div>
           </div>
@@ -39,8 +51,12 @@ import Notify from '../modals/Notify.vue'
 import { notificationService } from '../../api/notify';
 import { tests } from '../../api/index'
 import { format } from 'date-fns';
+import { useUserStore } from '../../store/user';
 
 const router = useRouter();
+
+const userStore = useUserStore();
+const role = computed(() => userStore.user?.role)
 
 const headers = ref({
   testsAvaibale: {
@@ -77,6 +93,9 @@ const getAllTests = async () => {
       testsDate: format(test.date_from, 'dd.MM.yyyy') + ' - ' + format(test.date_to, 'dd.MM.yyyy'),
       testsEdit: test.id,
       testsRemove: test.id,
+      testsStart: test.id,
+      active: test.is_active,
+      archived: test.was_passed
     })
     );
   }
@@ -106,6 +125,14 @@ const deleteTest = async (test_id: number) => {
       type: 'error',
     });
   }
+}
+
+const startTest = async(test_id: number) => {
+  router.push({ name: 'TestStarted', query: { test_id: test_id.toString() } })
+}
+
+const resultTest = async(test_id: number) => {
+  router.push({ name: 'TestsShowResult', query: { test_id: test_id.toString() } })
 }
 
 onMounted(async () => {

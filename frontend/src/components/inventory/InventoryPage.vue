@@ -49,6 +49,7 @@ import { useRoute } from 'vue-router';
 import { notificationService } from '../../api/notify';
 import { useUserStore } from '../../store/user';
 import { useInventoryStore } from '../../store/inventory/inventory';
+import { inventory } from '../../api';
 
 const route = useRoute();
 const pageTitle = computed(() => route.meta.name);
@@ -57,8 +58,6 @@ const showConfirmDialog = ref(false);
 const role = useUserStore().user?.role;
 
 const inventoryStore = useInventoryStore();
-
-const data = ref([]);
 
 const headers = {
   product_name: {
@@ -118,10 +117,18 @@ const saveRow = async (row: any) => {
     row.sales = 0;
   }
   try {
-    const response = 1
+    const response = await inventory.putInventoryByShop(
+      backUrl.value as string,
+      row.id,
+      row
+    )
     if (response) {
       row.closing_balance = response.closing_balance;
-
+      notificationService.addNotification({
+        title: "Успех",
+        message: "Данные изменены",
+        type: 'success'
+      })
     }
   } catch (error: any) {
     if (error.response && error.response.status === 400) {
@@ -139,7 +146,14 @@ const syncWithMS = async () => {
 }
 
 const clearForm = async () => {
-  
+  await inventory.clearItems(backUrl.value as string);
+  showConfirmDialog.value = false;
+  notificationService.addNotification({
+    title: "Успех",
+    message: "Данные очищены",
+    type: 'success'
+  })
+  inventoryStore.get();
 }
 
 const handleInputChange = debounce((row: any, key: string, value: number) => {

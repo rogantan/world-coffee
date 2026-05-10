@@ -47,7 +47,7 @@ import { useUserStore } from "../../store/user";
 const route = useRoute();
 const router = useRouter();
 const role = useUserStore().user?.role;
-const dateRange = ref([new Date(2022, 0, 1), new Date()]);
+const dateRange = ref([new Date(2026, 0, 1), new Date()]);
 const templateName = ref<any[]>([]);
 
 const currentSort = ref("");

@@ -1,9 +1,10 @@
 import calendar
 
 from app.testing.dao.test_dao import test_dao
+from app.testing.dao.test_result_dao import test_result_dao
 from app.testing.schema.test import SCreateTest, SUpdateTest
 from app.utils.support import compare_dicts, get_month_range
-from common.exceptions.error import TestAlreadyPassedException, TestNameAlreadyExistsException, TestNoActiveException
+from common.exceptions.error import TestAlreadyPassedException, TestNameAlreadyExistsException, TestNoActiveException, TestCannotBeEditedException
 from core.db_postgres import async_session
 from app.testing.dao.choice_dao import choice_dao
 from typing import List
@@ -33,7 +34,7 @@ class TestService:
       for question in test.questions:
           correct_answer_count = 0
           choices = await choice_dao.find_all_with_filter(
-            db, test_question_id=question.id
+            db, question_id=question.id
           )
           for option in choices:
             if option.is_correct:
@@ -66,10 +67,13 @@ class TestService:
       return await test_dao.create_test(db, test)
     
   async def update_test(
+    self,
     test_id: int,
     test: SUpdateTest,
   ):
     async with async_session.begin() as db:
+      if await test_result_dao.find_one_or_none(db, test_id=test_id):
+        raise TestCannotBeEditedException
 
       # проверяем, нет ли уже теста с таким же названием
       exist_test_with_name = await test_dao.find_one_or_none(db, name=test.name)

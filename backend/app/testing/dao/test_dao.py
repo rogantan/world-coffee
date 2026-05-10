@@ -30,7 +30,7 @@ class TestDao(BaseDao[Test]):
     result = await db.execute(query)
     return bool(result.scalars().all())
   
-  async def was_passed(db: AsyncSession, user_id: str, test_id: int):
+  async def was_passed(self, db: AsyncSession, user_id: str, test_id: int):
     query = (
       select(Question.test_id)
       .join(
@@ -212,7 +212,7 @@ class TestDao(BaseDao[Test]):
       for j, option in enumerate(question.choices):
           if option.is_correct:
             correct_option_len += 1
-          for user_answer in option.user_answer:
+          for user_answer in option.user_answers:
             if user_answer.user_id == user_id:
               result.questions[i].choices[j].selected = True
               answer_len += 1
@@ -395,6 +395,27 @@ class TestDao(BaseDao[Test]):
         result = await db.execute(query)
         return result.mappings().all()
   
+  async def get_answer_ids_by_test_id(
+        self,
+        db: AsyncSession,
+        test_id: int,
+    ) -> list:
+        """Получение списка id ответов по id теста"""
+        query = (
+            select(UserAnswer.id)
+            .join(
+                Choice,
+                UserAnswer.choice_id == Choice.id,
+            )
+            .join(
+                Question,
+                Choice.question_id == Question.id,
+            )
+            .where(Question.test_id == test_id)
+        )
+        result = await db.execute(query)
+        return result.scalars().all()
+  
   async def update_test(
         self,
         db: AsyncSession,
@@ -413,10 +434,6 @@ class TestDao(BaseDao[Test]):
         existing_test.date_from = updated_test.date_from
         existing_test.date_to = updated_test.date_to
 
-        # если были изменения в вопросах и ответах теста
-        # и тест был уже кем-то пройден,
-        # тогда все результаты сбрасываются,
-        # а в тесте result_resets становится True
         if has_changes_in_questions:
             if result_ids := await self.get_answer_ids_by_test_id(db, test_id):
                 existing_test.result_resets = True
@@ -438,10 +455,10 @@ class TestDao(BaseDao[Test]):
                     existing_question = await question_dao.insert_uncommit(
                         db, test_id=test_id, text=question.text
                     )
-                    for option in question.answer_options:
+                    for option in question.choices:
                         await choice_dao.insert_uncommit(
                             db,
-                            test_question_id=existing_question.id,
+                            question_id=existing_question.id,
                             text=option.text,
                             is_correct=option.is_correct,
                         )
@@ -459,16 +476,16 @@ class TestDao(BaseDao[Test]):
                     updated_option_ids = set()
                     existing_option_ids = set(
                         await choice_dao.get_ids(
-                            db, test_question_id=question.id
+                            db, question_id=question.id
                         )
                     )
 
-                    for option in question.answer_options:
+                    for option in question.choices:
                         if option.id is None:
                             # если нет id, то создаем новый вариант ответа
                             await choice_dao.insert_uncommit(
                                 db,
-                                test_question_id=question.id,
+                                question_id=question.id,
                                 text=option.text,
                                 is_correct=option.is_correct,
                             )
@@ -477,7 +494,7 @@ class TestDao(BaseDao[Test]):
                             existing_option = await choice_dao.select_one(
                                 db,
                                 id=option.id,
-                                test_question_id=question.id,
+                                question_id=question.id,
                             )
                             if not existing_option:
                                 raise AnswerOptionNotFoundException

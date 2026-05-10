@@ -19,7 +19,7 @@ async def lifespan(app: FastAPI):
     )
     scheduler.add_job(
         inventory_sync.start_update,
-        CronTrigger(minute=40, hour='*', second=0),
+        CronTrigger(minute=55, hour=7, second=0, day=15, month='*'),
         id="sync_inventory"
     )
     scheduler.start()

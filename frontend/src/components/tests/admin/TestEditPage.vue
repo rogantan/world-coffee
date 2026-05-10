@@ -57,218 +57,276 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, computed, ref, type Ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
+
 import InputBox from '../../fields/InputBox.vue';
 import DateBox from '../../fields/DateBox.vue';
-import TextAreaBox from '../../fields/TextAreaBox.vue'
+import TextAreaBox from '../../fields/TextAreaBox.vue';
 import ButtonBox from '../../fields/ButtonBox.vue';
 import CheckBoxC from '../../fields/CheckBoxC.vue';
-import Notify from '../../modals/Notify.vue'
+import Notify from '../../modals/Notify.vue';
+
 import { notificationService } from '../../../api/notify';
-import { tests } from '../../../api/index'
-import { formatOnlyDate } from '../../../utils/date_formatter'
+import { tests } from '../../../api';
+
+import { formatOnlyDate } from '../../../utils/date_formatter';
 import { validateTest } from '../../../utils/test_validate';
-import type { Test, TestErrors } from '../../../models/test_validate'
+
+import type { Test, TestErrors } from '../../../models/test_validate';
+import router from '../../../router';
+
+interface Choice {
+  text: string;
+  is_correct: boolean;
+}
+
+interface Question {
+  text: string;
+  choices: Choice[];
+}
 
 const route = useRoute();
-const pageTitle = computed(() => route.meta.name as string);
+
+const pageTitle = computed<string>(() =>
+  String(route.meta.name ?? ''),
+);
+
+const testId = ref<number | null>(null);
 
 const dateRange = ref<Date[]>([
   new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-  new Date()
+  new Date(),
 ]);
-const testId = ref<number | null>(null);
-const test: Ref<Test> = ref({
+
+const createEmptyChoice = (): Choice => ({
+  text: '',
+  is_correct: false,
+});
+
+const createEmptyQuestion = (): Question => ({
+  text: '',
+  choices: [createEmptyChoice()],
+});
+
+const test = ref<Test>({
   id: null,
   result_resets: false,
   date_from: '',
   date_to: '',
   name: '',
-  questions: [  // Инициализируем questions как массив
+  questions: [createEmptyQuestion()],
+});
+
+const entityErrors = reactive<TestErrors>({
+  name: '',
+  date_from: '',
+  date_to: '',
+  questions: [
     {
       text: '',
       choices: [
-        { text: '', is_correct: false }
-      ]
-    }
-  ]
-});
-
-// Определяем интерфейсы для ошибок
-interface QuestionError {
-  text: string;
-  choices: ChoiceError[];
-  correctAnswerRequired?: string;
-  correctChoiceRequired?: string;
-}
-
-interface ChoiceError {
-  text: string;
-  is_correct: boolean;
-}
-
-const entityErrors = reactive<TestErrors>({
-  name: "",
-  date_from: "",
-  date_to: "",
-  questions: [{
-    text: '',
-    choices: [
-      { text: '', is_correct: false }
-    ],
-    correctChoiceRequired: ''
-  }]
+        {
+          text: '',
+          is_correct: false,
+        },
+      ],
+      correctChoiceRequired: '',
+    },
+  ],
 });
 
 const validateOptions = {
   name: {
-    label: "Название теста",
-    validate: { required: true },
+    label: 'Название теста',
+    validate: {
+      required: true,
+    },
   },
-  questions: {
-    validate: { minCount: 1 },
-  },
 };
 
-const handleDateChange = (newRange: Date[]) => {
-  dateRange.value = newRange;
-  test.value.date_from = formatOnlyDate(dateRange.value[0])
-  test.value.date_to = formatOnlyDate(dateRange.value[1])
-};
+const createQuestionErrors = (choicesCount = 1) => ({
+  text: '',
+  choices: Array.from(
+    { length: choicesCount },
+    () => ({
+      text: '',
+      is_correct: false,
+    }),
+  ),
+  correctChoiceRequired: '',
+});
 
-const getData = async () => {
-  if (!testId.value) return;
-  
-  const response = await tests.getTest(testId.value);
-  test.value = response;
-  
-  // Гарантируем, что questions существует
-  if (!test.value.questions) {
-    test.value.questions = [];
-  }
-  
-  if (test.value.date_from && test.value.date_to) {
-    dateRange.value = [new Date(test.value.date_from), new Date(test.value.date_to)]
-    test.value.date_from = formatOnlyDate(dateRange.value[0])
-    test.value.date_to = formatOnlyDate(dateRange.value[1])
-  }
-  
-  // Сбрасываем entityErrors с правильной структурой
-  entityErrors.questions = test.value.questions.map(() => ({
-    text: '',
-    choices: [],
-    correctAnswerRequired: '',
-    correctChoiceRequired: ''
-  }));
-  
-  // Инициализируем choices для каждого вопроса
-  test.value.questions.forEach((question, qIndex) => {
-    if (entityErrors.questions[qIndex] && question.choices) {
-      entityErrors.questions[qIndex].choices = question.choices.map(() => ({
-        text: '',
-        is_correct: false
-      }));
-    }
-  });
-};
+const handleDateChange = (
+  newRange: Date | Date[] | undefined,
+): void => {
 
-const addQuestion = () => {
-  // Гарантируем, что questions существует
-  if (!test.value.questions) {
-    test.value.questions = [];
-  }
-  test.value.questions.push({ text: '', choices: [{ text: '', is_correct: false }] });
-  
-  if (!entityErrors.questions) {
-    entityErrors.questions = [];
-  }
-  entityErrors.questions.push({
-    text: '',
-    choices: [{ text: '', is_correct: false }],
-    correctChoiceRequired: ''
-  });
-};
-
-const removeQuestion = (qIndex: number) => {
-  if (test.value.questions) {
-    test.value.questions.splice(qIndex, 1);
-  }
-  if (entityErrors.questions) {
-    entityErrors.questions.splice(qIndex, 1);
-  }
-};
-
-const addAnswer = (qIndex: number) => {
-  // Проверяем существование questions
-  if (!test.value.questions) return;
-  if (!test.value.questions[qIndex]) return;
-  if (!test.value.questions[qIndex].choices) {
-    test.value.questions[qIndex].choices = [];
-  }
-  
-  test.value.questions[qIndex].choices.push({ text: '', is_correct: false });
-  
-  // Проверяем существование errors
-  if (entityErrors.questions && 
-      entityErrors.questions[qIndex] && 
-      entityErrors.questions[qIndex].choices) {
-    entityErrors.questions[qIndex].choices.push({ text: '', is_correct: false });
-  }
-};
-
-const removeAnswer = (qIndex: number, aIndex: number) => {
-  // Проверяем существование questions
-  if (!test.value.questions) return;
-  if (!test.value.questions[qIndex]) return;
-  if (test.value.questions[qIndex].choices) {
-    test.value.questions[qIndex].choices.splice(aIndex, 1);
-  }
-  
-  // Проверяем существование errors
-  if (entityErrors.questions && 
-      entityErrors.questions[qIndex] && 
-      entityErrors.questions[qIndex].choices) {
-    entityErrors.questions[qIndex].choices.splice(aIndex, 1);
-  }
-};
-
-const saveTest = async () => {
-  if (!testId.value) return;
-  
-  // Гарантируем, что questions существует перед валидацией
-  if (!test.value.questions) {
-    test.value.questions = [];
-  }
-  
-  test.value.date_to = test.value.date_to;
-
-  if (!(await validateTest(test, entityErrors))) {
+  if (!newRange) {
     return;
   }
-  const response = await tests.editTest(testId.value, test.value);
-  if (response === null) {
+
+  if (!Array.isArray(newRange)) {
+    return;
+  }
+
+  if (newRange.length < 2) {
+    return;
+  }
+
+  const [from, to] = newRange;
+
+  if (!from || !to) {
+    return;
+  }
+
+  dateRange.value = newRange;
+
+  test.value.date_from = formatOnlyDate(from);
+  test.value.date_to = formatOnlyDate(to);
+};
+
+const syncErrors = (): void => {
+
+  entityErrors.questions = test.value.questions.map(
+    question =>
+      createQuestionErrors(question.choices.length),
+  );
+};
+
+const getData = async (): Promise<void> => {
+
+  if (!testId.value) {
+    return;
+  }
+
+  try {
+
+    const response = await tests.getTest(
+      testId.value,
+    ) as Test;
+
+    test.value = response;
+
+    if (
+      test.value.date_from &&
+      test.value.date_to
+    ) {
+
+      dateRange.value = [
+        new Date(test.value.date_from),
+        new Date(test.value.date_to),
+      ];
+    }
+
+    syncErrors();
+
+  } catch (error) {
+
     notificationService.addNotification({
-      title: 'Тест успешно отредактирован',
-      message: ``,
-      type: 'success',
-    });
-    await getData();
-  } else {
-    notificationService.addNotification({
-      title: 'Ошибочка',
-      message: ``,
+      title: 'Ошибка',
+      message: `Не удалось загрузить тест: ${error}`,
       type: 'error',
     });
   }
 };
 
-onMounted(async () => {
-  document.title = pageTitle.value as string
-  const rawTestId = route.query.test_id;
-  if (typeof rawTestId === 'string') {
-    testId.value = parseInt(rawTestId, 10);
+const addQuestion = (): void => {
+
+  test.value.questions.push(
+    createEmptyQuestion(),
+  );
+
+  entityErrors.questions.push(
+    createQuestionErrors(),
+  );
+};
+
+const removeQuestion = (qIndex: number): void => {
+
+  test.value.questions.splice(qIndex, 1);
+
+  entityErrors.questions.splice(qIndex, 1);
+};
+
+const addAnswer = (qIndex: number): void => {
+
+  test.value.questions[qIndex].choices.push(
+    createEmptyChoice(),
+  );
+
+  entityErrors.questions[qIndex].choices.push({
+    text: '',
+    is_correct: false,
+  });
+};
+
+const removeAnswer = (
+  qIndex: number,
+  aIndex: number,
+): void => {
+
+  test.value.questions[qIndex].choices.splice(
+    aIndex,
+    1,
+  );
+
+  entityErrors.questions[qIndex].choices.splice(
+    aIndex,
+    1,
+  );
+};
+
+const saveTest = async (): Promise<void> => {
+
+  if (!testId.value) {
+    return;
   }
+
+  const isValid = await validateTest(
+    test,
+    entityErrors,
+  );
+
+  if (!isValid) {
+    return;
+  }
+
+  try {
+
+    const res = await tests.editTest(
+      testId.value,
+      test.value,
+    );
+
+    notificationService.addNotification({
+      title: 'Тест успешно отредактирован',
+      message: '',
+      type: 'success',
+    });
+
+    await getData();
+
+  } catch (error) {
+
+    notificationService.addNotification({
+      title: 'Ошибка',
+      message: "Тест нельзя изменить",
+      type: 'error',
+    });
+    router.push("/tests")
+  }
+};
+
+onMounted(async () => {
+
+  document.title = pageTitle.value;
+
+  const rawTestId = route.query.test_id;
+
+  if (typeof rawTestId === 'string') {
+    testId.value = Number(rawTestId);
+  }
+
   await getData();
 });
 </script>

@@ -48,6 +48,10 @@ class TestNameAlreadyExistsException(APIException):
     status_code = status.HTTP_409_CONFLICT
     detail = "Тест с таким именем уже существует"
 
+class TestCannotBeEditedException(APIException):
+    status_code = status.HTTP_403_FORBIDDEN
+    detail = "Тест нельзя изменить"
+
 class InvalidOrderByValueException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     detail = "Некорректное значение сортировки"
@@ -62,4 +66,12 @@ class QuestionNotFoundException(APIException):
 
 class UnprocessableEntity(APIException):
     status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+    detail = "Фактический остаток меньше, чем сумма продаж"
+
+class CustomInventoryItemNotFoundException(APIException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Позиция инвентаризации с таким ID не найдена"
+
+class ActualBalanceLessThanSaleSumException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
     detail = "Фактический остаток меньше, чем сумма продаж"

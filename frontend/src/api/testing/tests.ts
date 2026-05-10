@@ -3,6 +3,23 @@ import { apiService } from "../api";
 import type { tTestResult } from "../../types/testing/user";
 import type { Test } from "../../types/testing/tests";
 
+interface Tests {
+  name: string;
+  questions: Question[];
+}
+
+interface Choice {
+  id: number;
+  text: string;
+}
+
+interface Question {
+  id: number;
+  text: string;
+  multiple_answer: boolean;
+  choices: Choice[];
+}
+
 export const getTests = async (): Promise<tTestResult[]> =>
   await apiService.get<tTestResult[]>("/test/user/list");
 
@@ -21,11 +38,11 @@ export const editTest = async (test_id: any, test_data: any): Promise<null> =>
 export const deleteTest = async (test_id: number) =>
   await apiService.delete(`/test/admin/${test_id}`);
 
-export const startTest = async (test_id: number) =>
-  await apiService.get(`/test/passing/${test_id}/start`);
+export const startTest = async (test_id: number): Promise<Tests> =>
+  await apiService.get(`/test/passing/${test_id}/starting`);
 
 export const finishTest = async (test_id: number, answers: any) =>
-  await apiService.put(`/test/passing/${test_id}/finish`, answers);
+  await apiService.put(`/test/passing/${test_id}/finishing`, answers);
 
 export const getTestsDateResult = async (params: any) =>
   await apiService.get(

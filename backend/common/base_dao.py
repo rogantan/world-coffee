@@ -125,3 +125,13 @@ class BaseDao(Generic[Model]):
         data = await db.execute(query)
         await db.commit()
         return data.scalars().one()
+    
+    async def get_ids(
+        self,
+        db: AsyncSession,
+        **filter: dict,
+    ) -> list:
+        """Получение списка id"""
+        query = select(self.model.id).filter_by(**filter)
+        result = await db.execute(query)
+        return result.scalars().all()
