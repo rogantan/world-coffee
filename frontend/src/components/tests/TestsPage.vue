@@ -3,9 +3,17 @@
     <h2 class="header-container">
       {{ pageTitle }}
     </h2>
+    <div v-if="showConfirmDialog" class="backdrop" @click="showConfirmDialog = false"></div>
     <div class="card">
       <div v-if="role === 'admin'">
         <ButtonBox title="Создать тест" @click="createTest" />
+      </div>
+      <div v-if="showConfirmDialog" class="confirmation-dialog">
+        <p>Вы уверены, что хотите подтвердить данное действие?</p>
+        <div class="button-container">
+          <ButtonBox color="success" @click="deleteTest">Да</ButtonBox>
+          <ButtonBox color="danger" @click="showConfirmDialog = false">Нет</ButtonBox>
+        </div>
       </div>
 
       <TableContent :headers="headers" :data="reportEntries" :showPagination="false">
@@ -18,7 +26,7 @@
               </span>
               <span v-if="role == 'admin'">
                 <ButtonBox icon="ri-edit-box-line" color="warning" @click="editTest(row.testsEdit)" />
-                <ButtonBox icon="ri-delete-back-line" color="danger" @click="deleteTest(row.testsRemove)" />
+                <ButtonBox icon="ri-delete-back-line" color="danger" @click="setTestId(row.testsRemove)" />
               </span>
               <span>
                 <ButtonBox v-if="!row.archived && row.active"
@@ -55,8 +63,12 @@ import { useUserStore } from '../../store/user';
 
 const router = useRouter();
 
+const showConfirmDialog = ref(false);
+
 const userStore = useUserStore();
-const role = computed(() => userStore.user?.role)
+const role = computed(() => userStore.user?.role);
+
+const testId = ref<number | null>(null);
 
 const headers = ref({
   testsAvaibale: {
@@ -109,22 +121,31 @@ const editTest = async (test_id: number) => {
   router.push({ name: 'TestEdit', query: { test_id: test_id.toString() } });
 }
 
-const deleteTest = async (test_id: number) => {
-  const response = await tests.deleteTest(test_id)
-  if (response) {
-    reportEntries.value = reportEntries.value.filter((test: { testsRemove: number; }) => test.testsRemove !== test_id);
-    notificationService.addNotification({
-      title: 'Тест успешно удален',
-      message: ``,
-      type: 'success',
-    });
-  } else {
-    notificationService.addNotification({
-      title: 'Ошибка при удалении теста',
-      message: ``,
-      type: 'error',
-    });
+const setTestId = async (test_id: number) => {
+  testId.value = test_id;
+  showConfirmDialog.value = true;
+}
+
+const deleteTest = async () => {
+  if (testId.value) {
+    const response = await tests.deleteTest(testId.value)
+    if (response) {
+      reportEntries.value = reportEntries.value.filter((test: { testsRemove: number; }) => test.testsRemove !== testId.value);
+      showConfirmDialog.value = false;
+      notificationService.addNotification({
+        title: 'Тест успешно удален',
+        message: ``,
+        type: 'success',
+      });
+    } else {
+      notificationService.addNotification({
+        title: 'Ошибка при удалении теста',
+        message: ``,
+        type: 'error',
+      });
+    }
   }
+  
 }
 
 const startTest = async(test_id: number) => {
@@ -166,5 +187,28 @@ onMounted(async () => {
   padding: 10px;
   gap: 20px;
   background-color: #e9ecef;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 999;
+}
+
+.confirmation-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
 </style>

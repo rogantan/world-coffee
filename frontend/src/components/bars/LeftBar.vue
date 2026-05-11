@@ -71,7 +71,7 @@
               </a>
               </li>
 
-              <li class="side-nav-title">Инвентаризации</li>
+              <li class="side-nav-title" v-if="menuInventories.length > 0">Инвентаризации</li>
               <li class="side-nav-item" v-for="menuList in menuInventories" v-if="userRole === 'admin' || userRole === 'salesman' || userRole === 'auditor'"
               :key="menuList.name" @click="navigateTo(menuList.path, menuList.name, 'lists')" :class="{
                 'menuitem-active': activeMenu?.category === 'lists' && activeMenu.name === menuList.name,
@@ -198,35 +198,69 @@ const menuReports = computed(() => {
       path: "/reports/payment-journal"
     });
   }
-
+  if (hasAccess("revenue_month")) {
+    baseReports.push({
+      name: "Выручка в месяц",
+      icon: "ri-price-tag-3-line",
+      path: "/reports/revenue-month"
+    });
+  }
+  if (hasAccess("shift_day")) {
+    baseReports.push({
+      name: "Подсчёт смен (день)",
+      icon: "ri-user-line",
+      path: "/reports/shift-day"
+    });
+  }
+  if (hasAccess("shift_month")) {
+    baseReports.push({
+      name: "Подсчёт смен (месяц)",
+      icon: "ri-user-fill",
+      path: "/reports/shift-month"
+    })
+  }
   return baseReports;
 });
 
-const menuDashboards = ref([
-  {
-    name: "Точка продаж 1",
-    path: "/dashboard/1",
-    icon: "ri-dashboard-3-line"
-  },
-  {
-    name: "Точка продаж 2",
-    path: "/dashboard/2",
-    icon: "ri-dashboard-3-line"
+const menuDashboards = computed(() => {
+  const baseDashboards = [];
+  if (hasAccess("coffee_point")) {
+    baseDashboards.push({
+      name: "Coffee Point",
+      path: "/dashboard/1",
+      icon: "ri-dashboard-3-line"
+    });
   }
-]);
+  if (hasAccess("coffee_enjoy")) {
+    baseDashboards.push({
+      name: "Coffee Enjoy",
+      path: "/dashboard/2",
+      icon: "ri-dashboard-3-line"
+    })
+  }
+  return baseDashboards;
 
-const menuInventories = ref([
-  {
-    name: "Точка продаж 1",
-    path: "/inventory/1",
-    icon: "ri-file-list-2-line"
-  },
-  {
-    name: "Точка продаж 2",
-    path: "/inventory/2",
-    icon: "ri-file-list-2-line"
+});
+
+const menuInventories = computed(() => {
+  const baseInventories = [];
+  if (userRole.value === "admin" || userRole.value === "auditor" || (userRole.value === "salesman" && hasAccess("coffee_point"))) {
+    baseInventories.push({
+      name: "Coffee Point",
+      path: "/inventory/1",
+      icon: "ri-file-list-2-line"
+    });
   }
-]);
+  if (userRole.value === "admin" || userRole.value === "auditor" || (userRole.value === "salesman" && hasAccess("coffee_enjoy"))) {
+    baseInventories.push({
+      name: "Coffee Enjoy",
+      path: "/inventory/2",
+      icon: "ri-file-list-2-line"
+    });
+  }
+
+  return baseInventories;
+})
 
 const navigateTo = (path: string, menuName: string, category: string) => {
   activeMenu.value = {category, name: menuName};

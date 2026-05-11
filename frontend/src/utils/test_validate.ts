@@ -70,6 +70,10 @@ export async function validateTest(
                 isValid = false;
             }
         });
+        if (test.value.questions.length < 3) {
+            entityErrors.name = "Должно быть не менее трёх вопросов";
+            isValid = false;
+        }
     }
 
     return isValid;

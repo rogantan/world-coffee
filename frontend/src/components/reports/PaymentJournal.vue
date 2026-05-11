@@ -53,7 +53,7 @@
         <template #payment_purpose_name-cell="{ row }">
           <div v-if="editItem.id === row.id">
             <SelectBox :values="paymentPurposes" v-model="editItem.payment_purpose_id" />
-            <!-- @change="(value) => editItem.payment_purpose_id = value" -->
+            <!-- @change="(value: any) => editItem.payment_purpose_id = value"  -->
           </div>
           <div v-else>
             {{ row.payment_purpose_name }}
@@ -319,7 +319,7 @@ const addRecord = async () => {
 
 const editRecord = (row: any) => {
   const retailStore = retailStores.value?.find((store: any) => store.title === row.retail_store_name);
-  const paymentPurpose = paymentPurposes.value?.find((purpose: any) => purpose.title === row.payment_purpose_name);
+  const paymentPurpose = paymentPurposes.value?.find((purpose: any) => String(purpose.title).trim() === String(row.payment_purpose_name).trim());
   const employee = employees.value?.find((emp: any) => emp.title === row.employee_name);
   
   Object.assign(editItem, {

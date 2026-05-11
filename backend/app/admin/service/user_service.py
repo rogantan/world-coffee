@@ -62,6 +62,7 @@ class UserService:
         params = {"filter": f"updated>=2025-06-24 00:00:00"}
         employees = await ms_client.get("entity/employee", params=params, cache_key=False)
         employees = employees.get("rows", [])
+        print(employees)
         
         async with async_session() as session:
             await self.set_default_role(db=session, client=ms_client, employees=employees)
@@ -74,9 +75,6 @@ class UserService:
             if not user:
                 request = await client.get(f"entity/employee/{employee['id']}/security")
                 await user_dao.add_new_entity(db, employee, 2)
-            else:
-                data = {"archived": False}
-                await user_dao.update_one_uncommit(db, employee.get("id"), **data)
 
     async def delete_user(self, db, ms_client: AsyncHttpClient, up_time):
         deleted_users = await ms_client.get(

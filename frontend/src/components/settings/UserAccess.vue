@@ -170,6 +170,36 @@ const headers = ref<Headers>({
     key: "payment_journal",
     class: "lemon",
     sort: false
+  },
+  revenue_month: {
+    title: "Выручка за месяц",
+    key: "revenue_month",
+    class: "lemon",
+    sort: false
+  },
+  shift_day: {
+    title: "Подсчёт смен (день)",
+    key: "shift_day",
+    class: "lemon",
+    sort: false
+  },
+  shift_month: {
+    title: "Подсчёт смен (месяц)",
+    key: "shift_month",
+    class: "lemon",
+    sort: false
+  },
+  coffee_point: {
+    title: "Coffee Point",
+    key: "coffee_point",
+    class: "lemon",
+    sort: false
+  },
+  coffee_enjoy: {
+    title: "Coffee Enjoy",
+    key: "coffee_enjoy",
+    class: "lemon",
+    sort: false
   }
 });
 

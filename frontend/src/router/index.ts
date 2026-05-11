@@ -202,16 +202,16 @@ const dashboardRoutes: RouteRecordRaw[] = [
                 path: "1",
                 component: () => import("../components/reports/DashboardPage.vue"),
                 meta: {
-                    name: "Точка продаж",
-                    back_url: "Точка продаж"
+                    name: "Coffee Point",
+                    back_url: "Coffee Point"
                 }
             },
             {
                 path: "2",
                 component: () => import("../components/reports/DashboardPage.vue"),
                 meta: {
-                    name: "Кофе enjoy",
-                    back_url: "Кофе enjoy"
+                    name: "Coffee Enjoy",
+                    back_url: "Coffee Enjoy"
                 }
             }
         ]
@@ -244,16 +244,16 @@ const inventoryRoutes: RouteRecordRaw[] = [
                 path: "1",
                 component: () => import("../components/inventory/InventoryPage.vue"),
                 meta: {
-                    name: "Инвентаризация Точка продаж",
-                    back_url: "Точка продаж"
+                    name: "Инвентаризация Coffee Point",
+                    back_url: "Coffee Point"
                 }
             },
             {
                 path: "2",
                 component: () => import("../components/inventory/InventoryPage.vue"),
                 meta: {
-                    name: "Инвентаризация Кофе enjoy",
-                    back_url: "Кофе enjoy"
+                    name: "Инвентаризация Coffee Enjoy",
+                    back_url: "Coffee Enjoy"
                 }
             }
         ]
