@@ -84,7 +84,7 @@ const props = defineProps<Props>()
 
 </script>
 
-<style>
+<style scoped>
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

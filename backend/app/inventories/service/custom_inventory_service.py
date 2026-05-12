@@ -21,7 +21,6 @@ class CustomInventoryService:
       item = await custom_inventory_item_dao.find_by_id(session, item_id)
       
       if not item:
-        print("NOO")
         raise CustomInventoryItemNotFoundException
       print(item.id)
       data = data.model_dump()
@@ -43,5 +42,13 @@ class CustomInventoryService:
       if not retail_store:
         return
       return await custom_inventory_item_dao.clear_items(session, retail_store.id)
+    
+  async def unload_inventory(self, report_title: str, user):
+    async with async_session() as session:
+      retail_store = await retail_store_dao.find_one_or_none(session, name=report_title)
+      if not retail_store:
+        return
+      await custom_inventory_dao.unload_inventory_to_ms(session, retail_store.id, user)
+
 
 custom_inventory_service: CustomInventoryService = CustomInventoryService()

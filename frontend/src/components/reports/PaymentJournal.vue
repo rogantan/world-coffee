@@ -17,7 +17,7 @@
       </div>
     </h2>
     <div class="card">
-      <div>
+      <div v-if="hasAccessWrite('payment_journal')">
         <ButtonBox v-if="!recordIsEdit" title="Добавить запись" @click="addRecord" />
       </div>
       <TableContent :data="paymentJournalStore.pjournal" :headers="headers" @sort="handleSort" :sort_key="currentSort"
@@ -90,7 +90,7 @@
           </div>
         </template>
 
-        <template #edit-cell="{ row }">
+        <template #edit-cell="{ row }" v-if="hasAccessWrite('payment_journal')">
           <ButtonBox v-if="row.id === -1" color="success" icon="ri-save-2-line" @click="createRecord()" />
           <ButtonBox v-else color="success" icon="ri-save-2-line" @click="addEditedRecord()" />
           <ButtonBox color="warning" icon="ri-edit-box-line" @click="editRecord(row)" />
@@ -121,6 +121,7 @@ import { formatOnlyDate } from '../../utils/date_formatter'
 import type { PaymentErrors } from '../../models/payment_validate'
 import { useLoading } from '../../utils/loadingMixin';
 import { usePaymentJournalStore } from '../../store/reports/payment_journal';
+import { useUserStore } from '../../store/user';
 import type { PaymentJournal } from '../../types/reports/payment_journal';
 import { format } from 'date-fns';
 
@@ -129,10 +130,25 @@ const route = useRoute();
 const pageTitle = computed(() => route.meta.name as string);
 const recordIsEdit = ref(false)
 const { isLoading, loadingOptions, startLoading, stopLoading } = useLoading();
-
+const userStore = useUserStore();
+const userRole = computed(() => userStore.user?.role);
+const userAccess = computed(() => userStore.user?.permissions || []);
 const employees = ref();
 const retailStores = ref();
 const paymentPurposes = ref();
+
+function hasAccess(key: string) {
+  return userAccess.value.some(
+    (x) => x.title === key && x.mode === "displayed"
+  );
+}
+
+function hasAccessWrite(key: string) {
+  return userAccess.value.some(
+    (x) => x.title === key && x.mode === "editable"
+  );
+}
+
 const headersPaymentJournal = ref({
   payment_date: {
     title: "Дата оплаты",

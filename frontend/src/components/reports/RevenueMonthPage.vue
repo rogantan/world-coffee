@@ -22,7 +22,7 @@ import { onMounted, computed, ref, reactive, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import TableContent from '../fields/table/TableContent.vue'
 import DateBox from '../fields/DateBox.vue';
-import { ApiReport } from "@/api";
+import { revenue } from '../../api';
 import { formatOnlyDate } from '../../utils/date_formatter'
 import { processServerData } from '../../utils/response_formatter'
 import { useLoading } from '../../utils/loadingMixin';
@@ -30,7 +30,7 @@ import { useLoading } from '../../utils/loadingMixin';
 
 const route = useRoute();
 const pageTitle = computed(() => route.meta.name);
-const dateRange = ref([new Date(2022, 0, 1), new Date()]);
+const dateRange = ref([new Date(2026, 0, 1), new Date()]);
 const { isLoading, loadingOptions, startLoading, stopLoading } = useLoading();
 
 const headers = reactive({
@@ -82,7 +82,7 @@ const data = ref([])
 const getData = async () => {
   startLoading();
   const [date_from, date_to] = dateRange.value.map(date => formatOnlyDate(date));
-  const response = await ApiReport.getReportWithDate({ report_name: 'revenue_monthly', date_from, date_to })
+  const response = await revenue.getRevenueMonth({ date_from, date_to })
   if (response.length) {
     const processedData = processServerData(response);
     data.value = processedData;

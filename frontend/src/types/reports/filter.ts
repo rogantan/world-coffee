@@ -5,3 +5,8 @@ export type ReportFilter = {
   order_by?: string
   desc?: boolean
 }
+
+export type ReportFilerSecond = {
+  date_from: string
+  date_to?: string
+}

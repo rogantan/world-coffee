@@ -9,6 +9,7 @@ from app.reports.schema.sales_journal import SSale
 from app.reports.schema.auditor import SAuditReport
 from app.dashboard.service.retail_demand_service import retail_demand_service
 from app.inventories.service.inventory_service import inventory_service
+from app.reports.service.report_service import report_service
 from pprint import pprint
 
 router = APIRouter(prefix="/reports", tags=["Отчёты"])
@@ -27,5 +28,19 @@ async def get_auditor(user: CurrentUserDep, date_from: date, date_to: date, orde
   return await inventory_service.get_all(date_from, date_to, order_by, desc)
 
 @router.get("/revenue_monthly", summary='Отчёт Выручка в месяц')
-async def get_revenue_monthly(user: CurrentUserDep):
-  pass
+async def get_revenue_monthly(user: CurrentUserDep, date_from: date, date_to: date,):
+  if not await has_permission(user, "revenue_month", PermissionMode.DISPLAYED):
+    raise ForbiddenException
+  return await report_service.get_revenue_month(date_from, date_to)
+
+@router.get("/shift_day")
+async def get_shift_day(user: CurrentUserDep, date_from: date, date_to: date):
+  if not await has_permission(user, "shift_day", PermissionMode.DISPLAYED):
+    raise ForbiddenException
+  return await report_service.get_shift_day(date_from, date_to)
+
+@router.get("/shift_month")
+async def get_shift_month(user: CurrentUserDep, date_from: date, date_to: date):
+  if not await has_permission(user, "shift_month", PermissionMode.DISPLAYED):
+    raise ForbiddenException
+  return await report_service.get_shift_month(date_from, date_to)

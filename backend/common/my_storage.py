@@ -89,7 +89,8 @@ class AsyncHttpClient:
         async with self.session.request(
             method, url, headers=self.headers, **kwargs
         ) as response:
-            if response.headers["Content-Type"] == "image/png":
+            content_type = response.headers.get("Content-Type", "")
+            if content_type.startswith("image/png"):
                 data = await response.read()
             else:
                 try:

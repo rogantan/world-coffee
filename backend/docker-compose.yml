@@ -10,7 +10,6 @@ services:
     command: poetry run uvicorn main:app --host 0.0.0.0 --port 8000
     depends_on:
       - db
-      - redis
     env_file:
       - .env
     volumes:
@@ -26,15 +25,7 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  redis:
-    image: redis:latest
-    restart: always
-    volumes:
-      - redis_data:/var/lib/redis
-    ports:
-      - "6397:6397"
     
 volumes:
   db_data:
   migrations:
-  redis_data:
