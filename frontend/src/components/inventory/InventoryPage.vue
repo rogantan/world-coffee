@@ -3,8 +3,8 @@
     <h2 class="data-block">
       <div class="data-item">
         {{ pageTitle }}
-        <ButtonBox v-if="role === 'admin' || role === 'auditor'" @click="syncWithMS">выгрузить в МойСклад</ButtonBox>
-        <ButtonBox v-if="role === 'admin' || role === 'salesman'" @click="showConfirmDialog = true">Очистить</ButtonBox>
+        <ButtonBox v-if="role === 'admin' || role === 'auditor' || role === 'salesman'" @click="syncWithMS">выгрузить в МойСклад</ButtonBox>
+        <ButtonBox v-if="role === 'admin' || role === 'auditor' || role === 'salesman'" @click="showConfirmDialog = true">Очистить</ButtonBox>
         <div v-if="showConfirmDialog" class="backdrop" @click="showConfirmDialog = false"></div>
 
         <div v-if="showConfirmDialog" class="confirmation-dialog">
@@ -18,7 +18,7 @@
     </h2>
     <TableContent :headers="headers" :data="inventoryStore.inventories">
       <template #sales-cell="{ row }">
-        <div v-if="role === 'salesman' || role === 'admin'">
+        <div v-if="role === 'salesman' || role === 'admin' || role === 'auditor'">
           <InputBox type="number" step=".01" v-model="row.sales" @update:modelValue="(value: any) => handleInputChange(row, 'sales', value)" />
         </div>
         <div v-else>
@@ -27,7 +27,7 @@
       </template>
 
       <template #actual_balance-cell="{ row }">
-        <div v-if="role === 'salesman' || role === 'admin'">
+        <div v-if="role === 'salesman' || role === 'admin' || role === 'auditor'">
           <InputBox type="number" step=".01" v-model="row.actual_balance" @update:modelValue="(value: any) => handleInputChange(row, 'actual_balance', value)" />
         </div>
         <div v-else>
@@ -142,7 +142,13 @@ const saveRow = async (row: any) => {
 }
 
 const syncWithMS = async () => {
-
+  await inventory.unloadInventoryByShop(backUrl.value as string);
+  notificationService.addNotification({
+    title: "Успех",
+    message: "Инвентаризация выгружена в МойСклад",
+    type: 'success'
+  });
+  inventoryStore.get();
 }
 
 const clearForm = async () => {
@@ -167,7 +173,7 @@ onMounted(async () => {
 })
 </script>
 
-<style>
+<style scoped>
 .data-block {
   display: flex;
   flex-direction: column;

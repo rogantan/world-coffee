@@ -47,7 +47,7 @@ class InventorySync:
   def get_price(self, product):
     sale_prices = product.get("salePrices", [])
     for price in sale_prices:
-      if price.get("priceType", {}).get("name") == "":
+      if price.get("priceType", {}).get("name") == "Цена продажи":
         return price["value"] / 100
     return 0
 

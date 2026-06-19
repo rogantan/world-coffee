@@ -71,6 +71,24 @@ class CustomInventoryDao(BaseDao[CustomInventory]):
       inventory_meta = response.get("meta")
       inventory_id = inventory_meta["href"].split("/")[-1]
       # делаем пересчет расчетного остатка в инвентаризации
+      
+      # enter_data = {
+      #   "store": self.get_store(store_id),
+      #   "organization": self.get_organization(),
+      #   # "positions": self.get_positions(items),
+      #   "inventory": {
+      #     "meta": {
+      #       "href": f"https://api.moysklad.ru/api/remap/1.2/entity/inventory/{inventory_id}",
+      #       "mediaType": "application/json",
+      #       "metadataHref": "https://api.moysklad.ru/api/remap/1.2/entity/inventory/metadata",
+      #       "type": "inventory",
+      #     }
+      #   }
+      # }
+      # status1 = await ms_client.post("entity/enter", enter_data)
+      # print(status1)
+      # status2 = await ms_client.post("entity/loss", enter_data)
+      # print(status2)
       await ms_client.put(f"rpc/inventory/{inventory_id}/recalcCalculatedQuantity")
   
 

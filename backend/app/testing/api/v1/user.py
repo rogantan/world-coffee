@@ -32,7 +32,7 @@ async def get_test_results(
   и последнее число в date_to.
   """
   # print(date_to)
-  if user.role not in ["admin", "senior_salesman", "salesman"]:
+  if user.role not in ["admin", "senior_salesman", "salesman", "accountant"]:
     raise ForbiddenException
 
   return await test_service.get_test_results(

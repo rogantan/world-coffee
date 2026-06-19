@@ -9,3 +9,6 @@ export const putInventoryByShop = async (report_title: string, item_id: string, 
 
 export const clearItems = async (report_title: string) =>
   await apiService.post(`/inventory/${report_title}/clear`);
+
+export const unloadInventoryByShop = async (report_title: string) => 
+  await apiService.post(`/inventory/${report_title}/inload`);

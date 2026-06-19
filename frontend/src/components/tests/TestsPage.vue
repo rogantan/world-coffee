@@ -29,17 +29,17 @@
                 <ButtonBox icon="ri-delete-back-line" color="danger" @click="setTestId(row.testsRemove)" />
               </span>
               <span>
-                <ButtonBox v-if="!row.archived && row.active"
+                <ButtonBox v-if="!row.archived"
                   title="Начать тест"
                   @click="startTest(row.testsStart)"
                   />
               </span>
-              <span>
+              <!-- <span>
                 <ButtonBox v-if="row.archived"
                   title="Результаты"
                   @click="resultTest(row.testsStart)"
                   />
-              </span>
+              </span> -->
             </div>
           </div>
         </template>
@@ -210,5 +210,11 @@ onMounted(async () => {
   border: 1px solid #ccc;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 </style>

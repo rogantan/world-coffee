@@ -6,7 +6,7 @@
         <template #resetPwd-cell="{ row }">
           <ButtonBox title="Сбросить пароль" @click="resetPwd(row.uid)" />
         </template>
-        <template #salaryCoefficient-cell="{ row }">
+        <!-- <template #salaryCoefficient-cell="{ row }">
           <div v-if="row.salaryCoefficientEdit" class="data-block">
             <div class="data-item">
               <span>
@@ -29,7 +29,7 @@
               </span>
             </div>
           </div>
-        </template>
+        </template> -->
 
         <template #role-cell="{ row }">
           <SelectBox :values="selectOptionsRole" v-model="row.role"
@@ -79,8 +79,7 @@ interface EmployerRow {
   employeeName: string
   empooyeeEmail: string
   // dateOfEmployment: string
-  salaryCoefficient: string
-  salaryCoefficientEdit: boolean
+  salaryIncrease: string
   employeeRole: string
   payment?: string
 }
@@ -141,9 +140,9 @@ const headers = ref<Headers>({
     class: "lemon",
     sort: false
   },
-  salary_coefficient: {
+  salaryIncrease: {
     title: "Коэффициент к окладу",
-    key: "salary_coefficient",
+    key: "salaryIncrease",
     class: "lemon",
     sort: false,
   },
@@ -222,6 +221,7 @@ const getPermissions = async () => {
         email: user.email,
         // salary_coefficient: user.salary_coefficent,
         // salaryCoefficientEdit: false,
+        salaryIncrease: user.salary_increase.value,
         resetPwd: user.uid || '',
         role: user.role,
         permissions: user.permissions,

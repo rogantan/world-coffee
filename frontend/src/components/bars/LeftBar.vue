@@ -60,8 +60,8 @@
               </a>
               </li>
 
-              <li class="side-nav-title" v-if="userRole === 'admin'">Дашборды</li>
-              <li class="side-nav-item" v-if="userRole === 'admin'" v-for="menuList in menuDashboards" 
+              <li class="side-nav-title" v-if="menuDashboards.length > 0">Дашборды</li>
+              <li class="side-nav-item" v-for="menuList in menuDashboards" 
               :key="menuList.name" @click="navigateTo(menuList.path, menuList.name, 'lists')" :class="{
                 'menuitem-active': activeMenu?.category === 'lists' && activeMenu.name === menuList.name,
               }">
@@ -224,14 +224,14 @@ const menuReports = computed(() => {
 
 const menuDashboards = computed(() => {
   const baseDashboards = [];
-  if (hasAccess("coffee_point")) {
+  if (hasAccess("coffee_point") && userRole.value !== "salesman") {
     baseDashboards.push({
       name: "Coffee Point",
       path: "/dashboard/1",
       icon: "ri-dashboard-3-line"
     });
   }
-  if (hasAccess("coffee_enjoy")) {
+  if (hasAccess("coffee_enjoy") && userRole.value !== "salesman") {
     baseDashboards.push({
       name: "Coffee Enjoy",
       path: "/dashboard/2",

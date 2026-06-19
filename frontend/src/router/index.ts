@@ -137,6 +137,14 @@ const testRoutes: RouteRecordRaw[] = [
                 meta: {
                     name: "Результаты теста"
                 }
+            },
+            {
+                name: "TestPreshowPage",
+                path: "result-user",
+                component: () => import("../components/tests/TestResultByUserPage.vue"),
+                meta: {
+                    name: "Результаты теста сотрудника"
+                }
             }
         ]
     }

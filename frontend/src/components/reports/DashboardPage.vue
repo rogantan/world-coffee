@@ -3,7 +3,7 @@
     <Loading :active.sync="isLoading" v-bind="loadingOptions" />
     <h2 class="header-container">
       {{ pageTitle }}
-      <DateBox placeholder="" v-model="dashboardStore.dates"/>
+      <!-- <DateBox placeholder="" v-model="dashboardStore.dates"/> -->
     </h2>  
     <DashboardBox v-if="dashboardStore.dashboardData" :data="dashboardStore.dashboardData"/>
   </div>

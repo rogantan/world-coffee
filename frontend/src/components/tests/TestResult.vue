@@ -12,19 +12,6 @@
               <span>
                 {{ row[`points_${item}`] }}
               </span>
-
-              <ButtonBox v-if="
-                row.employee_name !== ' ' &&
-                row[`points_${item}`] != null &&
-                role !== 'salesman'
-              " icon="ri-eye-line" color="success p-1" @click="
-                handleShowDetail(
-                  item,
-                  row.employee_id,
-                  row[`employee_name_${item}`]
-                )
-                ">
-              </ButtonBox>
             </div>
           </div>
         </template>
@@ -251,7 +238,8 @@ onBeforeMount(() => {
   if (
     curRole !== "admin" &&
     curRole !== "salesman" &&
-    curRole !== "senior_salesman"
+    curRole !== "senior_salesman" &&
+    curRole !== "accountant"
   ) {
     router.push("/access-deny");
   }

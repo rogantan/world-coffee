@@ -9,8 +9,8 @@ import { notificationService } from '../../api/notify';
 
 export const usePaymentJournalStore = defineStore("pjournal", () => {
   const pjournal = reactive<PaymentJournal[]>([]);
-  const paymentDates = ref<Date[]>([new Date(2022, 0, 1), new Date()]);
-  const accrualDates = ref<Date[]>([new Date(2022, 0, 1), new Date()]);
+  const paymentDates = ref<Date[]>([new Date(2026, 0, 1), new Date()]);
+  const accrualDates = ref<Date[]>([new Date(2026, 0, 1), new Date()]);
 
   const get = async () => {
     const filters: PaymentJournalBody = {

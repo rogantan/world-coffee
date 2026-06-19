@@ -11,5 +11,6 @@ export type User = {
     email: string,
     role: string,
     archived?: boolean,
+    salary_increase: { value: number },
     permissions: Permission[]
 }
